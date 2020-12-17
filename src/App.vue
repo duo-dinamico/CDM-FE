@@ -7,9 +7,7 @@
     </div>
     <button @click="load">Click here</button>
     <div v-for="project in projects" :key="project.project_number">
-      
-          {{ project.project_title }}
-      
+      {{ project.project_title }}
     </div>
     <router-view />
   </div>
@@ -23,10 +21,11 @@ export default {
   setup() {
     const projects = reactive([]);
 
-    const load = async () => {
-        projects.value = await getProjects()
-        console.log(projects.value)
-    }
+    const load = getProjects().then((res) => {
+      for (let project in res) {
+        projects.push(project);
+      }
+    });
 
     return { projects, load };
   },
