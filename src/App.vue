@@ -1,17 +1,36 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <div>
+      <router-link to="/">Home</router-link>
+      <router-link to="/project/:project_number">Project</router-link>
+      <router-link to="/project/:project_number/register">Register</router-link>
+    </div>
+    <button @click="load">Click here</button>
+    <div v-for="project in projects" :key="project.project_number">
+      
+          {{ project.project_title }}
+      
+    </div>
+    <router-view />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { getProjects } from "@/api";
+import { reactive } from "vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  setup() {
+    const projects = reactive([]);
+
+    const load = async () => {
+        projects.value = await getProjects()
+        console.log(projects.value)
+    }
+
+    return { projects, load };
+  },
+};
 </script>
 
 <style>
