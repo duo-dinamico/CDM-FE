@@ -5,9 +5,11 @@
       <router-link to="/project/:project_number">Project</router-link>
       <router-link to="/project/:project_number/register">Register</router-link>
     </div>
-    <button @click="load">Click here</button>
-    <div v-for="project in projects" :key="project.project_number">
-      {{ project.project_title }}
+    <button @click="addProject">Click to add new project</button>
+    <div>
+      <ul>
+        <li v-for="project in projects" :key="project.project_number">{{ project.project_title }}</li>
+      </ul>
     </div>
     <router-view />
   </div>
@@ -21,14 +23,23 @@ export default {
   setup() {
     const projects = reactive([]);
 
-    const load = getProjects().then((res) => {
-      for (let project in res) {
-        projects.push(project);
-      }
-    });
+    const load = () => {
+      getProjects().then((res) => {
+        for (let x of res) {
+          projects.push(x)
+        }
+      })
+    }
 
-    return { projects, load };
+    const addProject = () => {
+      projects.push({"project_number":"454545","project_title":"New Project","project_lead_office":"Atenas","client":"Arup","stage":"Demolition"})
+    }
+
+    return { projects, load, addProject };
   },
+  mounted() {
+    this.load()
+  }
 };
 </script>
 
