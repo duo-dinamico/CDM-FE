@@ -1,6 +1,6 @@
 <template>
   <nav id="sec-nav-bar">
-    <button @click="createNewProject">New Project</button>
+    <router-link to="add_project">Add New Project</router-link>
   </nav>
 </template>
 
@@ -11,7 +11,8 @@ export default {};
 <style>
 #sec-nav-bar {
   background: #cacaca;
-  height: 50px;
+  height: 2rem;
   top: 50px;
+  margin: 0 0 0 0;
 }
 </style>

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import SecNavBar from "./components/SecNavBar.vue";
+import SecNavBar from "@/components/SecNavBar.vue";
 import NavBar from "@/components/NavBar";
 import getProjects from "@/composables/getProjects";
 
@@ -28,8 +28,9 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   margin-top: 0px;
+}
+body {
+  margin: 0 0 0 0;
 }
 </style>
