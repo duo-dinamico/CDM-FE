@@ -1,13 +1,15 @@
 <template>
-  <h1>Project</h1>
+  <div class="project">
+    <h1>Project</h1>
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
+.project {
+  background: lightblue;
+}
 </style>
