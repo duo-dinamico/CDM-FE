@@ -18,8 +18,6 @@ export default {
 
     loadProjects();
 
-    console.log(projects.value);
-
     return { projects };
   },
 };
