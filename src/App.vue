@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar />
-    <SecNavBar />
+    <SecNavBar :projects="projects" />
     <router-view />
   </div>
 </template>

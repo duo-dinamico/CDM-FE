@@ -44,9 +44,12 @@
 <script>
 import insertProject from "../composables/postProject.js";
 import { reactive, ref } from "vue";
+import router from "../router";
 
 export default {
-  setup() {
+  props: ["projects"],
+  setup(projects) {
+    console.log(projects);
     const stageSelect = [
       "Approval in Principle",
       "As-Built",
@@ -88,8 +91,13 @@ export default {
     };
 
     const handleClick = () => {
-      console.log(newProject);
-      insertProject(newProject);
+      if (!projectNumberError.value) {
+        insertProject(newProject);
+        router.push({
+          name: "Project",
+          params: { project_number: newProject.project_number },
+        });
+      }
     };
 
     return {

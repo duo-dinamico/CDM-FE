@@ -1,6 +1,6 @@
 <template>
   <nav id="sec-nav-bar">
-    <router-link to="add_project">Add New Project</router-link>
+    <router-link :to="{ name: 'Add New Project' }">Add New Project</router-link>
   </nav>
 </template>
 
