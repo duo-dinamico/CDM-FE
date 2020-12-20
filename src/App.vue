@@ -2,7 +2,7 @@
   <div id="app">
     <NavBar :projects="projects"/>
     <SecNavBar />
-    <router-view />
+    <router-view :key= "$route.fullPath" :projects="projects"/>
   </div>
 </template>
 

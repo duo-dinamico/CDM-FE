@@ -15,6 +15,7 @@ const routes = [
     path: "/project/:project_number",
     name: "Project",
     component: Project,
+    props: true,
   },
   {
     path: "/project/:project_number/register",
@@ -33,7 +34,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory("/"),
   routes,
 });
 
