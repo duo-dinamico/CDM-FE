@@ -1,12 +1,7 @@
 <template>
-  <div class="nav-bar">
-    <h1>NAV</h1>
-    <div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/project/:project_number">Project</router-link>
-      <router-link to="/project/:project_number/register">Register</router-link>
-    </div>
-  </div>
+  <nav id="nav-bar">
+    <router-link to="/">CDM Risk Register</router-link>
+  </nav>
 </template>
 
 <script>
@@ -14,13 +9,10 @@ export default {};
 </script>
 
 <style>
-.nav-bar {
-  background: red;
-}
-
-.nav-bar a {
-    color: yellow;
-    display: inline-block;
-    padding: 10px;
+#nav-bar {
+  background: #f05023;
+  height: 2rem;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 </style>

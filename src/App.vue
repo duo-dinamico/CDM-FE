@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/project/:project_number">Project</router-link>
-      <router-link to="/project/:project_number/register">Register</router-link>
-    </div>
     <NavBar />
     <SecNavBar />
     <router-view />
@@ -12,26 +7,18 @@
 </template>
 
 <script>
-import { getProjects } from "@/api";
-import { reactive } from "vue";
-import SecNavBar from "./components/SecNavBar.vue";
+import SecNavBar from "@/components/SecNavBar.vue";
 import NavBar from "@/components/NavBar";
+import getProjects from "@/composables/getProjects";
 
 export default {
   components: { NavBar, SecNavBar },
   setup() {
-    let projects = reactive([]);
+    const { projects, loadProjects } = getProjects();
 
-    const load = async () => {
-      let data = await getProjects();
-      console.log(data);
-      for (let proj of data) {
-        projects.push(proj);
-      }
-    };
-    load();
+    loadProjects();
 
-    return { projects, load };
+    return { projects };
   },
 };
 </script>
@@ -41,8 +28,9 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   margin-top: 0px;
+}
+body {
+  margin: 0 0 0 0;
 }
 </style>
