@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar />
+    <NavBar :projects="projects"/>
     <SecNavBar />
     <router-view />
   </div>
@@ -17,6 +17,8 @@ export default {
     const { projects, loadProjects } = getProjects();
 
     loadProjects();
+
+    console.log(projects.value);
 
     return { projects };
   },

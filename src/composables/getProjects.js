@@ -7,8 +7,9 @@ const getProjects = () => {
   const loadProjects = async () => {
     try {
       let res = await axios.get("https://cdm-be.herokuapp.com/api/projects");
-      let { projects } = res.data;
-      projects.value = await projects;
+      for (let project of res.data.projects) {
+        projects.value.push(project);
+      }
     } catch (err) {
       console.log(err);
     }
