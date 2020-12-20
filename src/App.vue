@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar />
+    <NavBar :projects="projects"/>
     <SecNavBar />
     <router-view />
   </div>
