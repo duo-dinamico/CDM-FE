@@ -10,17 +10,25 @@
 
 <script>
 import { reactive } from "vue";
-import { useRoute} from "vue-router"
+import { useRoute } from "vue-router";
+import getProjects from "@/composables/getProjects.js";
 
 export default {
-  props: ["projects", "project_number"],
-  setup(props) {
+  // props: ["projects"],
+  setup() {
+    const { projects, loadProjects } = getProjects();
+
     const route = useRoute();
-    console.log(route.params)
+    console.log("route params", route.params);
+
     let project = reactive({});
 
+    for (let i; i < projects.length; i++) {
+      console.log("iiiiii: ", i);
+    }
+
     const singleProject = () => {
-      console.log("temp: ", tempProject)
+      console.log("temp: ", tempProject);
       // console.log("Params: ", $route.params.project_number)
       // const tempProject = props.projects.filter(
       //   (proj) => {
@@ -28,26 +36,30 @@ export default {
       //     return proj.project_number === props.project_number}
       // );
       const tempProject = () => {
-        console.log("start of temp")
-        console.log("start of temp projects", props.projects)
-        for (let proj of props.projects) {
-          console.log("inside temp, project number: ", proj.project_number)
-          if (proj.project_number == route.params.project_number) {
-            console.log("inside temp, proj: ", proj)
-            return proj
+        console.log("start of temp");
+        // console.log("start of temp projects", props.projects)
+        for (let i; i < projects.length; i++) {
+          console.log(
+            "inside temp, project number: ",
+            route.params.project_number
+          );
+          if (projects[i].project_number == route.params.project_number) {
+            console.log("inside temp, proj: ", projects[i]);
+            return projects[i];
+          } else {
+            console.log("fail");
           }
-          else {
-            console.log("fail")
-          }
-      }}
-      console.log("outside temp, tempProject: ", tempProject)
+        }
+      };
+      console.log("outside temp, tempProject: ", tempProject);
       project = tempProject();
       console.log("outside temp, project: ", project);
     };
-
+    loadProjects();
+    console.log(projects);
     singleProject();
 
-    return { singleProject, project };
+    return { project };
   },
 };
 </script>
