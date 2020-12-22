@@ -6,20 +6,32 @@
     <h2>Client: {{ project.client }}</h2>
     <h2>Stage: {{ project.stage }}</h2>
   </div>
+  <button class="delButton" @click="handleDelete">Delete this project</button>
+  <!-- <div class="delButton" @click="delProjectClick">Delete this project</div> -->
 </template>
 
 <script>
 import { useRoute } from "vue-router";
 import getSingleProject from "@/composables/getSingleProject.js";
+import removeProject from "@/composables/removeProject";
+import router from "@/router"
 
 export default {
-  setup() {
+  setup(props, {emit}) {
     const route = useRoute();
 
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject(route.params.project_number);
+    
+    const handleDelete = async () => {
+      await removeProject(route.params.project_number)
+      await router.push({
+          name: "Home",
+        });
+        await emit("reload");
+    }
 
-    return { project };
+    return { project, handleDelete };
   },
 };
 </script>
@@ -27,5 +39,20 @@ export default {
 <style>
 .project {
   background: lightblue;
+}
+.delButton {
+  display: inline-block;
+  background:red;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+.delButton:active {
+    color:green;
+}
+.delButton:hover {
+    color:blue;
 }
 </style>
