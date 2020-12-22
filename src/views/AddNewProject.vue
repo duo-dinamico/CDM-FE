@@ -6,6 +6,7 @@
       id="project_number"
       v-model="newProject.project_number"
       @keyup="checkProjectNumber"
+      @change="checkIfProjectExists"
       required
     />
     <span v-if="projectNumberError">{{ projectNumberError }}</span
@@ -37,16 +38,18 @@
       </option>
     </select>
 
-    <button @click.prevent="handleClick">Submit Project</button>
+    <button>Submit Project</button>
   </form>
 </template>
 
 <script>
 import insertProject from "../composables/postProject.js";
 import { reactive, ref } from "vue";
+import router from "@/router";
 
 export default {
-  setup() {
+  props: ["projects"],
+  setup(props) {
     const stageSelect = [
       "Approval in Principle",
       "As-Built",
@@ -87,18 +90,35 @@ export default {
       newProject.stage = $event.target.value;
     };
 
-    const handleClick = () => {
-      console.log(newProject);
-      insertProject(newProject);
+    const checkIfProjectExists = () => {
+      for (const project of props.projects) {
+        if (
+          project.project_number === newProject.project_number &&
+          newProject.project_number.length === 9
+        ) {
+          projectNumberError.value = `${newProject.project_number} already exists.`;
+        }
+      }
+    };
+
+    const handleSubmitProject = async () => {
+      if (projectNumberError.value === null) {
+        await insertProject(newProject);
+        await router.push({
+          name: "Project",
+          params: { project_number: newProject.project_number },
+        });
+      }
     };
 
     return {
       newProject,
       changeStage,
       stageSelect,
-      handleClick,
+      handleSubmitProject,
       projectNumberError,
       checkProjectNumber,
+      checkIfProjectExists,
     };
   },
 };
