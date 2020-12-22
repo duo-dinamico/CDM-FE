@@ -6,6 +6,7 @@ const getProjects = () => {
 
   const loadProjects = async () => {
     try {
+      console.log("ive reloaded");
       let res = await axios.get("https://cdm-be.herokuapp.com/api/projects");
       for (let project of res.data.projects) {
         projects.value.push(project);

@@ -8,7 +8,7 @@
         :key="project.project_number"
         :value="project.project_number"
       >
-        {{ project.project_title }}
+        {{ `${project.project_number} - ${project.project_title}` }}
       </option>
     </select>
   </nav>

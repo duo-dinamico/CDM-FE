@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <NavBar :projects="projects"/>
+    <NavBar :projects="projects" />
     <SecNavBar :projects="projects" />
-    <router-view :key="$route.fullPath" :projects="projects" />
+    <router-view
+      :key="$route.fullPath"
+      :projects="projects"
+      @reload="loadProjects"
+    />
   </div>
 </template>
 
@@ -18,7 +22,7 @@ export default {
 
     loadProjects();
 
-    return { projects };
+    return { projects, loadProjects };
   },
 };
 </script>
