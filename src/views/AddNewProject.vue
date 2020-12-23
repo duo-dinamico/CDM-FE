@@ -49,6 +49,7 @@ import router from "@/router";
 
 export default {
   props: ["projects"],
+  emits: ["reload"],
   setup(props, { emit }) {
     const stageSelect = [
       "Approval in Principle",
@@ -90,10 +91,6 @@ export default {
       newProject.stage = $event.target.value;
     };
 
-    const reloadProjects = () => {
-      emit("reload");
-    };
-
     const checkIfProjectExists = () => {
       for (const project of props.projects) {
         if (
@@ -112,7 +109,7 @@ export default {
           name: "Project",
           params: { project_number: newProject.project_number },
         });
-        await reloadProjects();
+        await emit("reload");
       }
     };
 
