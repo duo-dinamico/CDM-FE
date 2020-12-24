@@ -7,7 +7,6 @@
     <h2>Stage: {{ project.stage }}</h2>
   </div>
   <button class="delButton" @click="handleDelete">Delete this project</button>
-  <!-- <div class="delButton" @click="delProjectClick">Delete this project</div> -->
 </template>
 
 <script>
