@@ -6,6 +6,7 @@
     <h2>Client: {{ project.client }}</h2>
     <h2>Stage: {{ project.stage }}</h2>
   </div>
+  <RecordIssues :project="project" v-if="project" />
   <Spinner v-else />
 </template>
 
@@ -13,9 +14,10 @@
 import { useRoute } from "vue-router";
 import getSingleProject from "@/composables/getSingleProject.js";
 import Spinner from "@/components/Spinner";
+import RecordIssues from "@/components/RecordIssues";
 
 export default {
-  components: { Spinner },
+  components: { Spinner, RecordIssues },
   setup() {
     const route = useRoute();
 
