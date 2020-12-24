@@ -2,7 +2,7 @@
   <nav id="nav-bar">
     <router-link :to="{ name: 'Home' }">CDM Risk Register</router-link>
     <select id="project" @change="changeProject">
-      <option value="none" selected disabled hiden>Select a project</option>
+      <option value="none" selected disabled hidden>Select a project</option>
       <option
         v-for="project in projects"
         :key="project.project_number"
