@@ -29,10 +29,12 @@ export default {
 
 <style>
 #app {
+  display: inline-flexbox;
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-top: 0px;
+  margin: 0 0 0 0;
+  background: #dfdede8c;
+  width: 100vw;
+  height: 100vh;
 }
 body {
   margin: 0 0 0 0;
