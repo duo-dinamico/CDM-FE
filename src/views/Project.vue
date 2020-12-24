@@ -5,8 +5,8 @@
     <h2>Lead Office: {{ project.project_lead_office }}</h2>
     <h2>Client: {{ project.client }}</h2>
     <h2>Stage: {{ project.stage }}</h2>
+    <button class="delButton" @click="handleDelete">Delete this project</button>
   </div>
-  <button class="delButton" @click="handleDelete">Delete this project</button>
   <RecordIssues :project="project" v-if="project" />
   <Spinner v-else />
 </template>
@@ -43,6 +43,10 @@ export default {
 <style>
 .project {
   background: lightblue;
+  padding: 20px;
+  margin: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
 }
 .delButton {
   display: inline-block;
