@@ -14,22 +14,22 @@
 import { useRoute } from "vue-router";
 import getSingleProject from "@/composables/getSingleProject.js";
 import removeProject from "@/composables/removeProject";
-import router from "@/router"
+import router from "@/router";
 
 export default {
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     const route = useRoute();
 
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject(route.params.project_number);
-    
+
     const handleDelete = async () => {
-      await removeProject(route.params.project_number)
+      await removeProject(route.params.project_number);
       await router.push({
-          name: "Home",
-        });
-        await emit("reload");
-    }
+        name: "Home",
+      });
+      await emit("reload");
+    };
 
     return { project, handleDelete };
   },
@@ -42,7 +42,7 @@ export default {
 }
 .delButton {
   display: inline-block;
-  background:red;
+  background: red;
   border: 2px solid;
   border-radius: 10px;
   padding: 5px;
@@ -50,9 +50,9 @@ export default {
   text-align: center;
 }
 .delButton:active {
-    color:green;
+  color: green;
 }
 .delButton:hover {
-    color:blue;
+  color: blue;
 }
 </style>
