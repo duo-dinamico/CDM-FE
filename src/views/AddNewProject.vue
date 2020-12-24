@@ -1,5 +1,6 @@
 <template>
-  <form @submit.prevent="handleSubmitProject">
+  <Spinner v-if="isLoading" />
+  <form @submit.prevent="handleSubmitProject" v-else>
     <label for="project_number">Project Number:</label>
     <input
       type="text"
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import Spinner from "@/components/Spinner";
 import insertProject from "../composables/postProject.js";
 import { reactive, ref } from "vue";
 import router from "@/router";
@@ -50,6 +52,7 @@ import router from "@/router";
 export default {
   props: ["projects"],
   emits: ["reload"],
+  components: { Spinner },
   setup(props, { emit }) {
     const stageSelect = [
       "Approval in Principle",
@@ -71,11 +74,10 @@ export default {
       project_title: "",
       project_lead_office: "",
       client: "",
-
       stage: "Approval in Principle",
     });
-
     const projectNumberError = ref(null);
+    const isLoading = ref(false);
 
     const checkProjectNumber = () => {
       const regexPattern = /^[0-9]{6}-[0-9]{2}$/gm;
@@ -104,7 +106,9 @@ export default {
 
     const handleSubmitProject = async () => {
       if (projectNumberError.value === null) {
+        isLoading.value = true;
         await insertProject(newProject);
+        isLoading.value = false;
         await router.push({
           name: "Project",
           params: { project_number: newProject.project_number },
@@ -121,6 +125,7 @@ export default {
       projectNumberError,
       checkProjectNumber,
       checkIfProjectExists,
+      isLoading,
     };
   },
 };

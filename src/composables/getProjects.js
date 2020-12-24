@@ -6,6 +6,11 @@ const getProjects = () => {
 
   const loadProjects = async () => {
     try {
+      // artificially simulating delay
+      await new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
+
       let res = await axios.get("https://cdm-be.herokuapp.com/api/projects");
       for (let project of res.data.projects) {
         projects.value.push(project);
