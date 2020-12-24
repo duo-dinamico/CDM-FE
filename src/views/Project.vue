@@ -1,18 +1,21 @@
 <template>
-  <div class="project">
+  <div class="project" v-if="project">
     <h1>Project {{ $route.params.project_number }}</h1>
     <h2>Project: {{ project.project_title }}</h2>
     <h2>Lead Office: {{ project.project_lead_office }}</h2>
     <h2>Client: {{ project.client }}</h2>
     <h2>Stage: {{ project.stage }}</h2>
   </div>
+  <Spinner v-else />
 </template>
 
 <script>
 import { useRoute } from "vue-router";
 import getSingleProject from "@/composables/getSingleProject.js";
+import Spinner from "@/components/Spinner";
 
 export default {
+  components: { Spinner },
   setup() {
     const route = useRoute();
 

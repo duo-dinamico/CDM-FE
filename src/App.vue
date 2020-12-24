@@ -6,17 +6,20 @@
       :key="$route.fullPath"
       :projects="projects"
       @reload="loadProjects"
+      v-if="projects.length"
     />
+    <Spinner v-else />
   </div>
 </template>
 
 <script>
 import SecNavBar from "@/components/SecNavBar.vue";
 import NavBar from "@/components/NavBar";
+import Spinner from "@/components/Spinner";
 import getProjects from "@/composables/getProjects";
 
 export default {
-  components: { NavBar, SecNavBar },
+  components: { NavBar, SecNavBar, Spinner },
   setup() {
     const { projects, loadProjects } = getProjects();
 
