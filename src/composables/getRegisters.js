@@ -9,7 +9,6 @@ const getRegisters = () => {
       let res = await axios.get(
         `https://cdm-be.herokuapp.com/api/project/${project_number}/register`
       );
-      console.log("Res: ", res.data.risks);
       registers.value = res.data.risks;
     } catch (err) {
       console.log(err);

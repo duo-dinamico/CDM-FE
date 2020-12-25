@@ -1,34 +1,56 @@
 <template>
   <div class="register">
-    <h1>Register for project {{ route.params.project_number }}</h1>
-    <div
-      class="single_register"
-      v-for="register in registers"
-      :key="register.register_id"
-    >
-      <p>Date: {{ register.date }}</p>
-      <p>Id: {{ register.register_id }}</p>
-      <p>Desc: {{ register.description }}</p>
-      <p>Discipline: {{ register.discipline }}</p>
-      <p>Environmental risk: {{ register.environmental_risk }}</p>
-      <p>Further action required: {{ register.further_action_required }}</p>
-      <p>HS risk: {{ register.hs_risk }}</p>
-      <p>Identified by: {{ register.identified_by }}</p>
+    <h1>Registers for project {{ route.params.project_number }}</h1>
+    <p>Button status: {{ showAll }}</p>
+    <button @click="showAll = !showAll">Show All</button>
+    <!-- Show as table -->
+    <div v-if="!showAll">
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Desc</th>
+          <th>Risk status</th>
+        </tr>
+        <tr
+          class="single_register"
+          v-for="register in registers"
+          :key="register.register_id"
+        >
+          <single-register :register="register" :showAll="showAll" />
+        </tr>
+      </table>
+    </div>
+
+    <!-- Show as div -->
+    <div v-else>
+      <div
+        class="single_register"
+        v-for="register in registers"
+        :key="register.register_id"
+      >
+        <single-register :register="register" :showAll="showAll" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import getRegisters from "@/composables/getRegisters";
+import singleRegister from "@/components/singleRegister";
 import { useRoute } from "vue-router";
+import { ref } from "vue";
+
 export default {
+  components: { singleRegister },
   setup() {
+    const showAll = ref(false);
+
     const route = useRoute();
     const { registers, loadRegisters } = getRegisters();
 
     loadRegisters(route.params.project_number);
 
-    return { registers, route };
+    return { registers, route, showAll };
   },
 };
 </script>
