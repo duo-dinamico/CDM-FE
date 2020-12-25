@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar :projects="projects" />
-    <SecNavBar :projects="projects" />
+    <SecNavBar />
     <router-view
       :key="$route.fullPath"
       :projects="projects"

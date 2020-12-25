@@ -5,6 +5,7 @@
     <h2>Lead Office: {{ project.project_lead_office }}</h2>
     <h2>Client: {{ project.client }}</h2>
     <h2>Stage: {{ project.stage }}</h2>
+    <button class="delButton" @click="handleDelete">Delete this project</button>
   </div>
   <RecordIssues :project="project" v-if="project" />
   <Spinner v-else />
@@ -13,18 +14,28 @@
 <script>
 import { useRoute } from "vue-router";
 import getSingleProject from "@/composables/getSingleProject.js";
+import removeProject from "@/composables/removeProject";
+import router from "@/router";
 import Spinner from "@/components/Spinner";
 import RecordIssues from "@/components/RecordIssues";
 
 export default {
   components: { Spinner, RecordIssues },
-  setup() {
+  setup(props, { emit }) {
     const route = useRoute();
 
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject(route.params.project_number);
 
-    return { project };
+    const handleDelete = async () => {
+      await removeProject(route.params.project_number);
+      await router.push({
+        name: "Home",
+      });
+      await emit("reload");
+    };
+
+    return { project, handleDelete };
   },
 };
 </script>
@@ -32,5 +43,24 @@ export default {
 <style>
 .project {
   background: lightblue;
+  padding: 20px;
+  margin: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+}
+.delButton {
+  display: inline-block;
+  background: red;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+.delButton:active {
+  color: green;
+}
+.delButton:hover {
+  color: blue;
 }
 </style>

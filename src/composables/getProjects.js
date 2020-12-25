@@ -12,9 +12,7 @@ const getProjects = () => {
       });
 
       let res = await axios.get("https://cdm-be.herokuapp.com/api/projects");
-      for (let project of res.data.projects) {
-        projects.value.push(project);
-      }
+      projects.value = res.data.projects;
     } catch (err) {
       console.log(err);
     }
