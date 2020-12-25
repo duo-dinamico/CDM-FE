@@ -4,10 +4,6 @@
   </nav>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style>
 #sec-nav-bar {
   background: #cacaca;
