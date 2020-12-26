@@ -1,37 +1,56 @@
 <template>
-  <td v-if="!showAll">{{ register.date }}</td>
-  <td v-if="!showAll">{{ register.description }}</td>
-  <td v-if="!showAll">{{ register.risk_status }}</td>
+  <td>
+    <button @click="handleClickEdit">
+      📝
+    </button>
+    <button @click="handleClickDelete">❌</button>
+  </td>
+  <td>{{ register.description }}</td>
+  <td>{{ register.risk_status }}</td>
+  <td>{{ register.discipline }}</td>
+  <td>XXX</td>
+  <td>{{ register.revision }}</td>
+  <td>{{ register.project_lifecycle_stage }}</td>
+  <td v-if="register.hs_risk">H</td>
+  <td v-else></td>
+  <td v-if="register.environmental_risk">E</td>
+  <td v-else></td>
+  <td v-if="register.programme_risk">P</td>
+  <td v-else></td>
+  <td v-if="register.other_risk">O</td>
+  <td v-else></td>
+  <td>{{ register.likelihood }}</td>
+  <td>{{ register.severity }}</td>
+  <td>XXX</td>
+  <td>{{ register.relevant_documentation }}</td>
+  <td>{{ register.owner_of_risk }}</td>
+  <td>{{ register.mitigation_action }}</td>
+  <td>{{ register.likelihood_mitigated }}</td>
+  <td>{{ register.severity_mitigation }}</td>
+  <td>XXX</td>
 
-  <div v-if="showAll">
-    <p>Date: {{ register.date }}</p>
-    <p>Desc: {{ register.description }}</p>
-    <p>Discipline: {{ register.discipline }}</p>
-    <p>Environmental risk: {{ register.environmental_risk }}</p>
-    <p>Further action required: {{ register.further_action_required }}</p>
-    <p>HS risk: {{ register.hs_risk }}</p>
-    <p>Identified by: {{ register.identified_by }}</p>
-    <p>Likelihood: {{ register.likelihood }}</p>
-    <p>Likelihood mitigated: {{ register.likelihood_mitigated }}</p>
-    <p>Mitigation action: {{ register.mitigation_action }}</p>
-    <p>Other risk: {{ register.other_risk }}</p>
-    <p>Owner of risk: {{ register.owner_of_risk }}</p>
-    <p>Programme risk: {{ register.programme_risk }}</p>
-    <p>Project lifecycle stage: {{ register.project_lifecycle_stage }}</p>
-    <p>Project number: {{ register.project_number }}</p>
-    <p>Id: {{ register.register_id }}</p>
-    <p>Relevant documentation: {{ register.relevant_documentation }}</p>
-    <p>Revision: {{ register.revision }}</p>
-    <p>Risk status: {{ register.risk_status }}</p>
-    <p>Severity: {{ register.severity }}</p>
-    <p>Severity mitigation: {{ register.severity_mitigation }}</p>
-  </div>
+  <td v-if="register.further_action_required">Y</td>
+  <td v-else>N</td>
+
+  <td>XXX</td>
+  <td>{{ register.identified_by }}</td>
+  <td>{{ register.date }}</td>
 </template>
 
 <script>
 export default {
-  props: ["register", "showAll"],
-  setup() {},
+  props: ["register"],
+  setup() {
+    const handleClickEdit = () => {
+      console.log("Edit");
+    };
+
+    const handleClickDelete = () => {
+      console.log("Delete");
+    };
+
+    return { handleClickEdit, handleClickDelete };
+  },
 };
 </script>
 
