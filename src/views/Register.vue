@@ -35,7 +35,7 @@
         v-for="register in registers"
         :key="register.register_id"
       >
-        <single-register :register="register" />
+        <single-register :register="register" :project_number="route.params.project_number"/>
       </tr>
       <!-- Add new line -->
       <tr>
@@ -49,6 +49,7 @@
             type="text"
             form="new_risk"
             v-model="newRegister.description"
+            required
           />
         </td>
         <td>
@@ -92,7 +93,12 @@
         </td>
         <td>XXX</td>
         <td>
-          <input type="text" form="new_risk" v-model="newRegister.revision" />
+          <input
+            type="text"
+            form="new_risk"
+            v-model="newRegister.revision"
+            required
+          />
         </td>
         <td>
           <select
@@ -108,8 +114,8 @@
         </td>
         <td>
           <select id="hs_risk" form="new_risk" v-model="newRegister.hs_risk">
-            <option value="True">True</option>
-            <option value="False">False</option>
+            <option value=true>True</option>
+            <option value=false>False</option>
           </select>
         </td>
         <td>
@@ -118,8 +124,8 @@
             form="new_risk"
             v-model="newRegister.environmental_risk"
           >
-            <option value="True">True</option>
-            <option value="False">False</option>
+            <option value=true>True</option>
+            <option value=false>False</option>
           </select>
         </td>
         <td>
@@ -128,8 +134,8 @@
             form="new_risk"
             v-model="newRegister.programme_risk"
           >
-            <option value="True">True</option>
-            <option value="False">False</option>
+            <option value=true>True</option>
+            <option value=false>False</option>
           </select>
         </td>
         <td>
@@ -138,8 +144,8 @@
             form="new_risk"
             v-model="newRegister.other_risk"
           >
-            <option value="True">True</option>
-            <option value="False">False</option>
+            <option value=true>True</option>
+            <option value=false>False</option>
           </select>
         </td>
         <td>
@@ -172,6 +178,7 @@
             type="text"
             form="new_risk"
             v-model="newRegister.relevant_documentation"
+            required
           />
         </td>
         <td>
@@ -179,6 +186,7 @@
             type="text"
             form="new_risk"
             v-model="newRegister.owner_of_risk"
+            required
           />
         </td>
         <td>
@@ -186,6 +194,7 @@
             type="text"
             form="new_risk"
             v-model="newRegister.mitigation_action"
+            required
           />
         </td>
         <td>
@@ -223,8 +232,8 @@
             form="new_risk"
             v-model="newRegister.further_action_required"
           >
-            <option value="True">Y</option>
-            <option value="False">N</option>
+            <option value=true>Y</option>
+            <option value=false>N</option>
           </select>
         </td>
         <td>XXX</td>
@@ -233,10 +242,16 @@
             type="text"
             form="new_risk"
             v-model="newRegister.identified_by"
+            required
           />
         </td>
         <td>
-          <input type="text" form="new_risk" v-model="newRegister.date" />
+          <input
+            type="text"
+            form="new_risk"
+            v-model="newRegister.date"
+            required
+          />
         </td>
       </tr>
     </table>
@@ -244,7 +259,7 @@
 </template>
 
 <script>
-import getRegisters from "@/composables/getRegisters";
+import Registers from "@/composables/Registers";
 import singleRegister from "@/components/singleRegister";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
@@ -275,12 +290,13 @@ export default {
     });
     const route = useRoute();
 
-    const { registers, loadRegisters } = getRegisters();
+    const { registers, loadRegisters, addRegister } = Registers();
 
     loadRegisters(route.params.project_number);
 
-    const handleClickAdd = () => {
-      console.log("Add", newRegister.value);
+    const handleClickAdd = async () => {
+      await addRegister(newRegister, route.params.project_number);
+      
     };
 
     return { registers, route, handleClickAdd, newRegister };

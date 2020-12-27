@@ -38,15 +38,25 @@
 </template>
 
 <script>
+import Registers from "@/composables/Registers";
+import { useRoute } from "vue-router";
+
 export default {
   props: ["register"],
-  setup() {
+  setup(props) {
+
+    const { delRegister } = Registers();
+
+    const route = useRoute();
+
+
     const handleClickEdit = () => {
       console.log("Edit");
     };
 
-    const handleClickDelete = () => {
-      console.log("Delete");
+    const handleClickDelete = async () => {
+      await delRegister(route.params.project_number, props.register.discipline, props.register.project_lifecycle_stage, props.register.register_id);
+      console.log("Delete: ", route.params.project_number, props.register.discipline, props.register.project_lifecycle_stage, props.register.register_id);
     };
 
     return { handleClickEdit, handleClickDelete };
