@@ -34,7 +34,7 @@
         </tr>
 
         <!-- Call Single Register Component with a for loop -->
-        <single-register
+        <SingleRegister
           v-for="register in registers"
           :key="register.register_id"
           :register="register"
@@ -269,13 +269,13 @@
 
 <script>
 import Registers from "@/composables/Registers";
-import singleRegister from "@/components/singleRegister";
+import SingleRegister from "@/components/SingleRegister";
 import Spinner from "@/components/Spinner";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 export default {
-  components: { singleRegister, Spinner },
+  components: { SingleRegister, Spinner },
   setup() {
     const newRegister = ref({
       description: "",
