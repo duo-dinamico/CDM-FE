@@ -8,7 +8,7 @@
   <td>{{ register.description }}</td>
   <td>{{ register.risk_status }}</td>
   <td>{{ register.discipline }}</td>
-  <td>XXX</td>
+  <td>{{ register.risk_number }}</td>
   <td>{{ register.revision }}</td>
   <td>{{ register.project_lifecycle_stage }}</td>
   <td v-if="register.hs_risk">H</td>
@@ -41,22 +41,32 @@
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
 
+
 export default {
   props: ["register"],
   setup(props) {
-
     const { delRegister } = Registers();
 
     const route = useRoute();
-
 
     const handleClickEdit = () => {
       console.log("Edit");
     };
 
     const handleClickDelete = async () => {
-      await delRegister(route.params.project_number, props.register.discipline, props.register.project_lifecycle_stage, props.register.register_id);
-      console.log("Delete: ", route.params.project_number, props.register.discipline, props.register.project_lifecycle_stage, props.register.register_id);
+      await delRegister(
+        route.params.project_number,
+        props.register.discipline,
+        props.register.project_lifecycle_stage,
+        props.register.register_id
+      );
+      console.log(
+        "Delete: ",
+        route.params.project_number,
+        props.register.discipline,
+        props.register.project_lifecycle_stage,
+        props.register.register_id
+      );
     };
 
     return { handleClickEdit, handleClickDelete };
