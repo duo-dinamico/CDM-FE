@@ -9,6 +9,19 @@
   </nav>
 </template>
 
+<script>
+import { useRoute } from "vue-router";
+
+export default {
+  setup() {
+    // route variable for route related actions
+    const route = useRoute();
+
+    return { route };
+  },
+};
+</script>
+
 <style>
 .sec-nav-bar {
   background: #cacaca;

@@ -18,12 +18,16 @@ import removeProject from "@/composables/removeProject";
 import router from "@/router";
 import Spinner from "@/components/Spinner";
 import RecordIssues from "@/components/RecordIssues";
+import { useRoute } from "vue-router";
 
 export default {
   props: ["projects"],
   emits: ["reload"],
   components: { Spinner, RecordIssues },
-  setup() {
+  setup(_, { emit }) {
+    // route variable for route related actions
+    const route = useRoute();
+
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject();
 
@@ -41,5 +45,4 @@ export default {
 </script>
 
 <style>
-
 </style>
