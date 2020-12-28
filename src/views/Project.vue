@@ -14,6 +14,8 @@
 
 <script>
 import getSingleProject from "@/composables/getSingleProject.js";
+import removeProject from "@/composables/removeProject";
+import router from "@/router";
 import Spinner from "@/components/Spinner";
 import RecordIssues from "@/components/RecordIssues";
 
@@ -25,10 +27,19 @@ export default {
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject();
 
-    return { project };
+    const handleDelete = async () => {
+      await removeProject(route.params.project_number);
+      await router.push({
+        name: "Home",
+      });
+      await emit("reload");
+    };
+
+    return { project, handleDelete };
   },
 };
 </script>
 
 <style>
+
 </style>
