@@ -5,8 +5,7 @@
       v-for="project in projects"
       :project="project"
       :key="project.project_number"
-      :title="project.project_number"
-      @click.self="handleProjectSelect"
+      @click="handleProjectSelect(project.project_number)"
     />
   </div>
 </template>
@@ -20,10 +19,10 @@ export default {
   emits: ["reload"],
   components: { ProjectCard },
   setup() {
-    const handleProjectSelect = ($event) => {
+    const handleProjectSelect = (project_number) => {
       router.push({
         name: "Project",
-        params: { project_number: $event.target.title },
+        params: { project_number: project_number },
       });
     };
     return { handleProjectSelect };
@@ -44,5 +43,8 @@ export default {
   margin: 10px 10px 10px 10px;
   min-width: 250px;
   cursor: pointer;
+}
+.project-card:hover {
+  background: gray;
 }
 </style>

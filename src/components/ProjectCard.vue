@@ -20,16 +20,16 @@ export default {
 h1 {
   padding: 10px 5px 5px 10px;
   margin: 0px 0px 0px 0px;
-  cursor: text;
+  cursor: pointer;
 }
 h3 {
   padding: 5px 5px 5px 10px;
   margin: 0px 0px 100px 0px;
-  cursor: text;
+  cursor: pointer;
 }
 h5 {
   padding: 5px 5px 5px 10px;
   margin: 0px 0px 0px 0px;
-  cursor: text;
+  cursor: pointer;
 }
 </style>
