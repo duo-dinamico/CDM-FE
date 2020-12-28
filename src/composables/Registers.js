@@ -16,17 +16,24 @@ const Registers = () => {
         // console.log(index, reg)
         let new_risk_number = 1;
         if (index > 0) {
-          
           for (let i = 0; i < index; i++) {
-            console.log(i, reg.discipline, registers.value[i].discipline);
-            if (reg.discipline == registers.value[i].discipline && reg.project_lifecycle_stage == registers.value[i].project_lifecycle_stage) {
-              new_risk_number++
-              console.log("yes: ", new_risk_number);
+            // console.log(i, reg.discipline, registers.value[i].discipline);
+            if (
+              reg.discipline == registers.value[i].discipline &&
+              reg.project_lifecycle_stage ==
+                registers.value[i].project_lifecycle_stage
+            ) {
+              new_risk_number++;
+              // console.log("yes: ", new_risk_number);
             }
           }
         }
         reg.risk_number =
-          reg.discipline + "-" + reg.project_lifecycle_stage + "-" + new_risk_number;
+          reg.discipline +
+          "-" +
+          reg.project_lifecycle_stage +
+          "-" +
+          new_risk_number.toString().padStart(3, "0");
       }
     } catch (err) {
       console.log(err);
@@ -35,22 +42,19 @@ const Registers = () => {
 
   const addRegister = async (newRegister, project_number) => {
     try {
-      console.log("new: ", newRegister.value);
-      let res = await axios.post(
+      await axios.post(
         `https://cdm-be.herokuapp.com/api/project/${project_number}/register`,
         { ...newRegister.value }
       );
-      console.log(res);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const delRegister = async (project_number, discipline, stage, number) => {
+  const delRegister = async (project_number, risk_number) => {
     try {
-      console.log("delRegister", project_number, discipline, stage, number);
       await axios.delete(
-        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${discipline}-${stage}-${number}`
+        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${risk_number}`
       );
     } catch (err) {
       console.log(err);

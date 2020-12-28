@@ -30,13 +30,17 @@
         <th>Identified by</th>
         <th>Date</th>
       </tr>
-      <tr
+
+      <!-- Call Single Register Component with a for loop -->
+      <single-register
         class="single_register"
         v-for="register in registers"
         :key="register.register_id"
-      >
-        <single-register :register="register" :project_number="route.params.project_number"/>
-      </tr>
+        :register="register"
+        :project_number="route.params.project_number"
+        @reloadregisters="test"
+      />
+
       <!-- Add new line -->
       <tr>
         <td>
@@ -114,8 +118,8 @@
         </td>
         <td>
           <select id="hs_risk" form="new_risk" v-model="newRegister.hs_risk">
-            <option value=true>True</option>
-            <option value=false>False</option>
+            <option value="true">True</option>
+            <option value="false">False</option>
           </select>
         </td>
         <td>
@@ -124,8 +128,8 @@
             form="new_risk"
             v-model="newRegister.environmental_risk"
           >
-            <option value=true>True</option>
-            <option value=false>False</option>
+            <option value="true">True</option>
+            <option value="false">False</option>
           </select>
         </td>
         <td>
@@ -134,8 +138,8 @@
             form="new_risk"
             v-model="newRegister.programme_risk"
           >
-            <option value=true>True</option>
-            <option value=false>False</option>
+            <option value="true">True</option>
+            <option value="false">False</option>
           </select>
         </td>
         <td>
@@ -144,8 +148,8 @@
             form="new_risk"
             v-model="newRegister.other_risk"
           >
-            <option value=true>True</option>
-            <option value=false>False</option>
+            <option value="true">True</option>
+            <option value="false">False</option>
           </select>
         </td>
         <td>
@@ -232,8 +236,8 @@
             form="new_risk"
             v-model="newRegister.further_action_required"
           >
-            <option value=true>Y</option>
-            <option value=false>N</option>
+            <option value="true">Y</option>
+            <option value="false">N</option>
           </select>
         </td>
         <td>XXX</td>
@@ -247,7 +251,7 @@
         </td>
         <td>
           <input
-            type="text"
+            type="date"
             form="new_risk"
             v-model="newRegister.date"
             required
@@ -296,10 +300,19 @@ export default {
 
     const handleClickAdd = async () => {
       await addRegister(newRegister, route.params.project_number);
-      
+      await loadRegisters(route.params.project_number);
+
+      // Clear the data of newRegister
+      for (let key in newRegister.value) {
+        newRegister.value[key] = "";
+      }
     };
 
-    return { registers, route, handleClickAdd, newRegister };
+    const test = async () => {
+      await loadRegisters(route.params.project_number);
+    };
+
+    return { registers, route, handleClickAdd, newRegister, test };
   },
 };
 </script>
