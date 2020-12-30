@@ -6,17 +6,23 @@
     </td>
     <td>
       <input
+        @keyup="handleVersionError"
         type="text"
         v-model="version_number"
         form="newRecordForm"
         required
       />
+      <p v-if="versionError">{{ versionError }}</p>
     </td>
     <td>
-      <input type="text" v-model="stage_issued" form="newRecordForm" required />
+      {{ stage }}
     </td>
     <td>
-      <input type="text" v-model="purpose" form="newRecordForm" required />
+      <select id="purpose" v-model="purpose" form="newRecordForm" required>
+        <option v-for="option in purposeList" :key="option" :value="option">
+          {{ option }}
+        </option>
+      </select>
     </td>
     <td>
       <input type="date" v-model="date" form="newRecordForm" required />
@@ -38,20 +44,39 @@
 
 <script>
 import postProjectRecord from "@/composables/postProjectRecord";
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
+  props: ["stage", "versionlist"],
   emits: ["reload-records", "toggle-loading"],
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     // route variable for route related actions
     const route = useRoute();
 
+    // error handling for the possibility that the version number already exists
+    const versionError = ref("");
+    const handleVersionError = (event) => {
+      if (props.versionlist.includes(event.target.value)) {
+        versionError.value = "Version number already exists";
+      } else {
+        versionError.value = "";
+      }
+    };
+
+    // array of all purpose status available
+    const purposeList = [
+      "Draft",
+      "Information",
+      "Acceptance",
+      "Approval",
+      "H&S File",
+      "Residual Risks",
+    ];
+
     // this section is for posting a new record
     const newRecord = reactive({
-      project_number: route.params.project_number,
       version_number: "",
-      stage_issued: "",
       purpose: "",
       date: "",
       prepared: "",
@@ -61,13 +86,27 @@ export default {
     });
 
     const handleSubmitRecord = async () => {
-      emit("toggle-loading");
-      await postProjectRecord(newRecord.project_number, newRecord);
-      await emit("reload-records");
-      emit("toggle-loading");
+      if (!versionError.value) {
+        emit("toggle-loading");
+        newRecord.stage_issued = props.stage;
+        await postProjectRecord(route.params.project_number, newRecord);
+        for (let key in newRecord) {
+          if (key !== "stage_issued") {
+            newRecord[key] = "";
+          }
+        }
+        await emit("reload-records");
+        emit("toggle-loading");
+      }
     };
 
-    return { ...toRefs(newRecord), handleSubmitRecord };
+    return {
+      ...toRefs(newRecord),
+      handleSubmitRecord,
+      purposeList,
+      versionError,
+      handleVersionError,
+    };
   },
 };
 </script>

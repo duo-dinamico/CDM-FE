@@ -7,7 +7,7 @@
       <h2>Client: {{ project.client }}</h2>
       <h2>Stage: {{ project.stage }}</h2>
     </div>
-    <RecordIssues v-if="project" />
+    <RecordIssues v-if="project" :stage="project.stage" />
     <Spinner v-else />
   </div>
 </template>

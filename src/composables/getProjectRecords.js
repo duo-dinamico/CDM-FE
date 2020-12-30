@@ -1,10 +1,15 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 
 const getProjectRecords = () => {
   const route = useRoute();
   const projectRecords = ref([]);
+  const versionNumberList = computed(() => {
+    return projectRecords.value.map((projectRecord) => {
+      return projectRecord.version_number;
+    });
+  });
 
   const loadProjectRecords = async () => {
     try {
@@ -17,7 +22,7 @@ const getProjectRecords = () => {
     }
   };
 
-  return { projectRecords, loadProjectRecords };
+  return { projectRecords, loadProjectRecords, versionNumberList };
 };
 
 export default getProjectRecords;
