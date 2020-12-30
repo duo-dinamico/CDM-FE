@@ -19,7 +19,7 @@
     </td>
     <td>
       <select id="purpose" v-model="purpose" form="newRecordForm" required>
-        <option v-for="option in purposeList" :key="option" :value="option">
+        <option v-for="option in purposelist" :key="option" :value="option">
           {{ option }}
         </option>
       </select>
@@ -48,7 +48,7 @@ import { reactive, toRefs, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
-  props: ["stage", "versionlist"],
+  props: ["stage", "versionlist", "purposelist"],
   emits: ["reload-records", "toggle-loading"],
   setup(props, { emit }) {
     // route variable for route related actions
@@ -63,16 +63,6 @@ export default {
         versionError.value = "";
       }
     };
-
-    // array of all purpose status available
-    const purposeList = [
-      "Draft",
-      "Information",
-      "Acceptance",
-      "Approval",
-      "H&S File",
-      "Residual Risks",
-    ];
 
     // this section is for posting a new record
     const newRecord = reactive({
@@ -103,7 +93,6 @@ export default {
     return {
       ...toRefs(newRecord),
       handleSubmitRecord,
-      purposeList,
       versionError,
       handleVersionError,
     };

@@ -17,6 +17,7 @@
       v-for="projectRecord in projectRecords"
       :key="projectRecord.record_id"
       :projectRecord="projectRecord"
+      :purposelist="purposeList"
       @reload-records="loadProjectRecords"
       @toggle-loading="toggleLoading"
     />
@@ -25,6 +26,7 @@
       @toggle-loading="toggleLoading"
       :stage="stage"
       :versionlist="versionNumberList"
+      :purposelist="purposeList"
     />
   </table>
 </template>
@@ -48,6 +50,16 @@ export default {
     } = getProjectRecords();
     loadProjectRecords();
 
+    // array of all purpose status available
+    const purposeList = [
+      "Draft",
+      "Information",
+      "Acceptance",
+      "Approval",
+      "H&S File",
+      "Residual Risks",
+    ];
+
     // this section related to the loading spinner for all components
     const isLoading = ref(false);
     const toggleLoading = () => {
@@ -68,6 +80,7 @@ export default {
       toggleLoading,
       isLoading,
       versionNumberList,
+      purposeList,
     };
   },
 };

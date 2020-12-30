@@ -22,10 +22,17 @@
         type="text"
         form="editRecordForm"
         v-model="stage_issued"
-        :disabled="!isEditing"
+        disabled
       />
     </td>
-    <td>
+    <td v-if="isEditing">
+      <select id="purpose" v-model="purpose" form="newRecordForm" required>
+        <option v-for="option in purposelist" :key="option" :value="option">
+          {{ option }}
+        </option>
+      </select>
+    </td>
+    <td v-else>
       <input
         type="text"
         form="editRecordForm"
@@ -33,6 +40,7 @@
         :disabled="!isEditing"
       />
     </td>
+
     <td v-if="isEditing">
       <input type="date" form="editRecordForm" :disabled="!isEditing" />
     </td>
@@ -81,7 +89,7 @@ import { ref, toRefs } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
-  props: ["projectRecord"],
+  props: ["projectRecord", "purposelist"],
   emits: ["reload-records", "toggle-loading"],
   setup(props, { emit }) {
     // route variable for route related actions
