@@ -6,9 +6,11 @@ const getProjectRecords = () => {
   const route = useRoute();
   const projectRecords = ref([]);
   const versionNumberList = computed(() => {
-    return projectRecords.value.map((projectRecord) => {
-      return projectRecord.version_number;
-    });
+    if (projectRecords.value) {
+      return projectRecords.value.map((projectRecord) => {
+        return projectRecord.version_number;
+      });
+    }
   });
 
   const loadProjectRecords = async () => {

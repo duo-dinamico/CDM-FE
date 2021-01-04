@@ -1,13 +1,15 @@
 <template>
-  <tr>
+  <tr v-if="projectRecord">
     <form @submit.prevent="handleEditRecord" id="editRecordForm"></form>
     <td>
-      <button @click="toggleRecordEditable" v-if="!isEditing">📝</button>
+      <div v-if="!isEditing">
+        <button @click="toggleRecordEditable">📝</button>
+        <button @click="handleDelete">❌</button>
+      </div>
       <div v-else>
         <button @click="handleEditRecord">✅</button>
         <button @click="cancelRecordEdit">🚫</button>
       </div>
-      <button @click="handleDelete">❌</button>
     </td>
     <td>
       <input
@@ -85,7 +87,7 @@
 <script>
 import patchProjectRecord from "@/composables/patchProjectRecord";
 import delProjectRecord from "@/composables/delProjectRecord";
-import { ref, toRefs } from "vue";
+import { reactive, ref, toRefs } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
@@ -97,14 +99,20 @@ export default {
 
     // this section is for editing a record
     const isEditing = ref(false);
+    const cachedProjectRecord = reactive({});
+    if (props.projectRecord) {
+      Object.assign(cachedProjectRecord, props.projectRecord);
+    }
     const toggleRecordEditable = () => {
       isEditing.value = true;
     };
     const cancelRecordEdit = () => {
+      Object.assign(cachedProjectRecord, props.projectRecord);
       isEditing.value = false;
     };
     const handleEditRecord = async () => {
       emit("toggle-loading");
+      await Object.assign(props.projectRecord, cachedProjectRecord);
       await patchProjectRecord(
         route.params.project_number,
         props.projectRecord.version_number,
@@ -136,7 +144,7 @@ export default {
     // );
 
     return {
-      ...toRefs(props.projectRecord),
+      ...toRefs(cachedProjectRecord),
       handleDelete,
       handleEditRecord,
       toggleRecordEditable,

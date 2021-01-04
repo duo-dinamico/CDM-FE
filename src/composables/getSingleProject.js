@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 
 const getSingleProject = () => {
   const route = useRoute();
-  let project = ref({});
+  const project = ref(null);
 
   const loadSingleProject = async () => {
     try {

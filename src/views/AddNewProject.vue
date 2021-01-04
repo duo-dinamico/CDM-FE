@@ -34,7 +34,7 @@
 
     <label for="stage">Stage:</label>
     <select id="stage" @change="changeStage">
-      <option v-for="option in stageSelect" :key="option" :value="option">
+      <option v-for="option in stageselect" :key="option" :value="option">
         {{ option }}
       </option>
     </select>
@@ -50,25 +50,10 @@ import { reactive, ref } from "vue";
 import router from "@/router";
 
 export default {
-  props: ["projects"],
+  props: ["projects", "stageselect"],
   emits: ["reload"],
   components: { Spinner },
   setup(props, { emit }) {
-    const stageSelect = [
-      "Approval in Principle",
-      "As-Built",
-      "Construction",
-      "Demolition",
-      "Detailed Design",
-      "Feasibility / Masterplanning",
-      "Operation / Maintenance",
-      "Outline Design",
-      "Rail - GRIP 3 - Option Selection",
-      "Rail - GRIP 4 - Approval in Principle",
-      "Rail - GRIP 5 - Detail Design / AFC",
-      "Rail - GRIP 6 - Construction on Site",
-      "Rail - GRIP 7 - As-Built Records",
-    ];
     const newProject = reactive({
       project_number: "",
       project_title: "",
@@ -120,7 +105,6 @@ export default {
     return {
       newProject,
       changeStage,
-      stageSelect,
       handleSubmitProject,
       projectNumberError,
       checkProjectNumber,
