@@ -18,14 +18,16 @@ import removeProject from "@/composables/removeProject";
 import router from "@/router";
 import Spinner from "@/components/Spinner";
 import RecordIssues from "@/components/RecordIssues";
+import { useRoute } from 'vue-router';
 
 export default {
   props: ["projects"],
   emits: ["reload"],
   components: { Spinner, RecordIssues },
-  setup() {
+  setup(_, {emit}) {
     const { project, loadSingleProject } = getSingleProject();
     loadSingleProject();
+    const route = useRoute();
 
     const handleDelete = async () => {
       await removeProject(route.params.project_number);

@@ -262,6 +262,12 @@
             />
           </td>
         </tr>
+
+        <!-- New Component Teste -->
+        <SingleRegisterEdit
+          :isAdd = true
+          @reloadregisters="reloadregisters"
+        />
       </table>
     </div>
   </div>
@@ -270,12 +276,13 @@
 <script>
 import Registers from "@/composables/Registers";
 import SingleRegister from "@/components/SingleRegister";
+import SingleRegisterEdit from "@/components/SingleRegisterEdit";
 import Spinner from "@/components/Spinner";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 export default {
-  components: { SingleRegister, Spinner },
+  components: { SingleRegister, Spinner, SingleRegisterEdit },
   setup() {
     const newRegister = ref({
       description: "",
@@ -300,6 +307,7 @@ export default {
     });
     const route = useRoute();
     const isLoading = ref(false);
+    const isAdd = ref(true)
 
     const { registers, loadRegisters, addRegister } = Registers();
 
@@ -330,6 +338,7 @@ export default {
       newRegister,
       reloadregisters,
       isLoading,
+      isAdd
     };
   },
 };
