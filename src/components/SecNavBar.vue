@@ -6,6 +6,9 @@
     <router-link v-if="route.name === 'Project'" :to="{ name: 'Register' }">
       Master Register</router-link
     >
+    <router-link v-if="route.name === 'Register'" :to="{ name: 'Project' }">
+      Master Record</router-link
+    >
   </nav>
 </template>
 

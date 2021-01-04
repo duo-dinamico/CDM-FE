@@ -103,7 +103,6 @@
     </td>
     <td>
       <select id="likelihood" form="new_risk" v-model="newRegister.likelihood">
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -113,7 +112,6 @@
     </td>
     <td>
       <select id="severity" form="new_risk" v-model="newRegister.severity">
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -152,7 +150,6 @@
         form="new_risk"
         v-model="newRegister.likelihood_mitigated"
       >
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -166,7 +163,6 @@
         form="new_risk"
         v-model="newRegister.severity_mitigation"
       >
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -202,10 +198,13 @@
 
 <script>
 import { ref } from "vue";
+import Registers from "@/composables/Registers";
+import { useRoute } from "vue-router";
 export default {
-  props: ["isAdd"],
+  props: [],
   emits: ["reloadregisters"],
-  setup() {
+  setup(_, { emit }) {
+    const isLoading = ref(false);
     const newRegister = ref({
       description: "",
       risk_status: "",
@@ -227,19 +226,30 @@ export default {
       identified_by: "",
       date: "",
     });
-    return { newRegister };
+
+    const { addRegister } = Registers();
+
+    const route = useRoute();
+
+    const handleClickAdd = async () => {
+      isLoading.value = true;
+
+      // Add new register to the database
+      await addRegister(newRegister, route.params.project_number);
+
+      // Send an emit to the parent, for reload
+      await emit("reloadregisters");
+
+      // Clear the data of newRegister
+      for (let key in newRegister.value) {
+        newRegister.value[key] = "";
+      }
+      isLoading.value = false;
+    };
+
+    return { newRegister, handleClickAdd };
   },
 };
 </script>
 
-<style>
-.single_register_table td {
-  background: lightgray;
-  /* border: 1px solid; */
-  text-align: left;
-  vertical-align: middle;
-}
-.single_register_table td:hover {
-  background: #f5f5f5;
-}
-</style>
+<style></style>

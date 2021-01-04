@@ -39,6 +39,24 @@ const Registers = () => {
           reg.project_lifecycle_stage +
           "-" +
           new_risk_number.toString().padStart(3, "0");
+
+        // Calculate risk product
+        if (reg.likelihood * reg.severity < 4) {
+          reg.risk_product = "L";
+        } else if (reg.likelihood * reg.severity < 10) {
+          reg.risk_product = "M";
+        } else {
+          reg.risk_product = "H";
+        }
+
+        // Calculate risk product mitigation
+        if (reg.likelihood_mitigated * reg.severity_mitigation < 4) {
+          reg.risk_product_mitigated = "L";
+        } else if (reg.likelihood_mitigated * reg.severity_mitigation < 10) {
+          reg.risk_product_mitigated = "M";
+        } else {
+          reg.risk_product_mitigated = "H";
+        }
       }
     } catch (err) {
       console.log(err);
