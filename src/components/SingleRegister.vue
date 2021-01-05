@@ -8,31 +8,48 @@
       <button @click="handleClickDelete">❌</button>
     </td>
     <td>{{ register.description }}</td>
-    <td>{{ register.risk_status }}</td>
+
+    <td :class="register.risk_status">{{ register.risk_status }}</td>
+
     <td>{{ register.discipline }}</td>
     <td>{{ register.risk_number }}</td>
     <td>{{ register.revision }}</td>
-    <td>{{ register.project_lifecycle_stage }}</td>
-    <td v-if="register.hs_risk">H</td>
+
+    <td :class="'stage-' + register.project_lifecycle_stage">
+      {{ register.project_lifecycle_stage }}
+    </td>
+
+    <td v-if="register.hs_risk" class="HS-H">H</td>
     <td v-else></td>
-    <td v-if="register.environmental_risk">E</td>
+
+    <td v-if="register.environmental_risk" class="Env-E">E</td>
     <td v-else></td>
-    <td v-if="register.programme_risk">P</td>
+
+    <td v-if="register.programme_risk" class="Prog-P">P</td>
     <td v-else></td>
-    <td v-if="register.other_risk">O</td>
+
+    <td v-if="register.other_risk" class="Other-O">O</td>
     <td v-else></td>
-    <td>{{ register.likelihood }}</td>
-    <td>{{ register.severity }}</td>
-    <td></td>
+
+    <td class="numbers">{{ register.likelihood }}</td>
+    <td class="numbers">{{ register.severity }}</td>
+
+    <td :class="'risk-product-' + register.risk_product">
+      {{ register.risk_product }}
+    </td>
+
     <td>{{ register.relevant_documentation }}</td>
     <td>{{ register.owner_of_risk }}</td>
     <td>{{ register.mitigation_action }}</td>
-    <td>{{ register.likelihood_mitigated }}</td>
-    <td>{{ register.severity_mitigation }}</td>
-    <td></td>
 
-    <td v-if="register.further_action_required">Y</td>
-    <td v-else>N</td>
+    <td class="numbers">{{ register.likelihood_mitigated }}</td>
+    <td class="numbers">{{ register.severity_mitigation }}</td>
+    <td :class="'risk-product-' + register.risk_product">
+      {{ register.risk_product_mitigated }}
+    </td>
+
+    <td v-if="register.further_action_required" class="Further-Y">Y</td>
+    <td v-else class="numbers">N</td>
 
     <td></td>
     <td>{{ register.identified_by }}</td>
@@ -159,7 +176,6 @@
         form="new_risk"
         v-model="editedRegister.likelihood"
       >
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -169,7 +185,6 @@
     </td>
     <td>
       <select id="severity" form="new_risk" v-model="editedRegister.severity">
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -208,7 +223,6 @@
         form="new_risk"
         v-model="editedRegister.likelihood_mitigated"
       >
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -222,7 +236,6 @@
         form="new_risk"
         v-model="editedRegister.severity_mitigation"
       >
-        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -352,11 +365,123 @@ export default {
 <style>
 .single_register_table td {
   background: lightgray;
-  /* border: 1px solid; */
+  border: 1px solid;
   text-align: left;
   vertical-align: middle;
 }
+
+/* risk status styles */
+.single_register_table .ACTIVE {
+  background: red;
+  color: white;
+  font-weight: bold;
+}
+.single_register_table .RESOLVED {
+  background: white;
+  color: green;
+  font-weight: bold;
+}
+.single_register_table .CONTINUED {
+  background: white;
+  color: rgb(78, 4, 100);
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* risk lifecycle-stage styles */
+.single_register_table .stage-C {
+  background: rgb(86, 157, 238);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-O {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-M {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-D {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk H&S styles */
+.single_register_table .HS-H {
+  /* background: rgb(86, 157, 238); */
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Environment styles */
+.single_register_table .Env-E {
+  /* background: rgb(86, 157, 238); */
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Programme styles */
+.single_register_table .Prog-P {
+  /* background: rgb(86, 157, 238); */
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Other styles */
+.single_register_table .Other-O {
+  /* background: rgb(86, 157, 238); */
+  color: rgb(80, 163, 231);
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Numbers styles */
+.single_register_table .numbers {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Risk Product styles */
+.single_register_table .risk-product-L {
+  background: white;
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .risk-product-M {
+  background: orange;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .risk-product-H {
+  background: red;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Further styles */
+.single_register_table .Further-Y {
+  background: rgb(220, 233, 149);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
 .single_register_table td:hover {
-  background: #f5f5f5;
+  /* background: #f5f5f5; */
 }
 </style>
