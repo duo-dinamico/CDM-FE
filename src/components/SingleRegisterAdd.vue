@@ -26,26 +26,12 @@
     </td>
     <td>
       <select id="discipline" form="new_risk" v-model="newRegister.discipline">
-        <option value="GEN">GEN</option>
-        <option value="MULTI">MULTI</option>
-        <option value="OTHER">OTHER</option>
-        <option value="ACOU">ACOU</option>
-        <option value="ARCH">ARCH</option>
-        <option value="CIV">CIV</option>
-        <option value="ELEC">ELEC</option>
-        <option value="FACM">FACM</option>
-        <option value="FCDE">FCDE</option>
-        <option value="FIN">FIN</option>
-        <option value="FIRE">FIRE</option>
-        <option value="M&E">M&E</option>
-        <option value="MECH">MECH</option>
-        <option value="PM">PM</option>
-        <option value="R-3R">R-3R</option>
-        <option value="R-OLE">R-OLE</option>
-        <option value="R-PH">R-PH</option>
-        <option value="R-PS">R-PS</option>
-        <option value="R-PW">R-PW</option>
-        <option value="STR">STR</option>
+        <option
+          v-for="discipline in disciplineList"
+          :key="discipline"
+          :value="discipline"
+          >{{ discipline }}</option
+        >
       </select>
     </td>
     <td></td>
@@ -227,6 +213,29 @@ export default {
       date: "",
     });
 
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
+
     const { addRegister } = Registers();
 
     const route = useRoute();
@@ -247,7 +256,7 @@ export default {
       isLoading.value = false;
     };
 
-    return { newRegister, handleClickAdd };
+    return { newRegister, handleClickAdd, disciplineList };
   },
 };
 </script>

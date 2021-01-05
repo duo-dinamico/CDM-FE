@@ -31,8 +31,8 @@
     <td v-if="register.other_risk" class="Other-O">O</td>
     <td v-else></td>
 
-    <td class="numbers">{{ register.likelihood }}</td>
-    <td class="numbers">{{ register.severity }}</td>
+    <td class="center-cell">{{ register.likelihood }}</td>
+    <td class="center-cell">{{ register.severity }}</td>
 
     <td :class="'risk-product-' + register.risk_product">
       {{ register.risk_product }}
@@ -42,16 +42,25 @@
     <td>{{ register.owner_of_risk }}</td>
     <td>{{ register.mitigation_action }}</td>
 
-    <td class="numbers">{{ register.likelihood_mitigated }}</td>
-    <td class="numbers">{{ register.severity_mitigation }}</td>
+    <td class="center-cell">{{ register.likelihood_mitigated }}</td>
+    <td class="center-cell">{{ register.severity_mitigation }}</td>
     <td :class="'risk-product-' + register.risk_product">
       {{ register.risk_product_mitigated }}
     </td>
 
     <td v-if="register.further_action_required" class="Further-Y">Y</td>
-    <td v-else class="numbers">N</td>
+    <td v-else class="center-cell">N</td>
 
-    <td></td>
+    <td class="center-cell">
+      {{
+        !register.description
+          ? ""
+          : register.further_action_required
+          ? "TBC"
+          : ""
+      }}
+    </td>
+
     <td>{{ register.identified_by }}</td>
     <td>{{ register.date.substring(0, 10) }}</td>
   </tr>
@@ -91,26 +100,12 @@
         form="new_risk"
         v-model="editedRegister.discipline"
       >
-        <option value="GEN">GEN</option>
-        <option value="MULTI">MULTI</option>
-        <option value="OTHER">OTHER</option>
-        <option value="ACOU">ACOU</option>
-        <option value="ARCH">ARCH</option>
-        <option value="CIV">CIV</option>
-        <option value="ELEC">ELEC</option>
-        <option value="FACM">FACM</option>
-        <option value="FCDE">FCDE</option>
-        <option value="FIN">FIN</option>
-        <option value="FIRE">FIRE</option>
-        <option value="M&E">M&E</option>
-        <option value="MECH">MECH</option>
-        <option value="PM">PM</option>
-        <option value="R-3R">R-3R</option>
-        <option value="R-OLE">R-OLE</option>
-        <option value="R-PH">R-PH</option>
-        <option value="R-PS">R-PS</option>
-        <option value="R-PW">R-PW</option>
-        <option value="STR">STR</option>
+        <option
+          v-for="discipline in disciplineList"
+          :key="discipline"
+          :value="discipline"
+          >{{ discipline }}</option
+        >
       </select>
     </td>
     <td></td>
@@ -305,6 +300,29 @@ export default {
       date: "",
     });
 
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
+
     const isEdit = ref(false);
     const { delRegister, patchRegister } = Registers();
 
@@ -357,6 +375,7 @@ export default {
       editedRegister,
       handleCancelEdit,
       handleSaveEdit,
+      disciplineList,
     };
   },
 };
@@ -446,8 +465,8 @@ export default {
   font-weight: bold;
 }
 
-/* risk Numbers styles */
-.single_register_table .numbers {
+/* risk Centered Cells styles */
+.single_register_table .center-cell {
   color: black;
   text-align: center;
   font-weight: bold;
