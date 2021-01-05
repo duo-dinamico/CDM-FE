@@ -91,11 +91,13 @@ export default {
     // this function will delete a project from the db
     const route = useRoute();
     const handleDelete = async () => {
-      await removeProject(route.params.project_number);
-      await emit("reload");
-      await router.push({
-        name: "Home",
-      });
+      if (confirm("Are you sure you want to delete?")) {
+        await removeProject(route.params.project_number);
+        await emit("reload");
+        await router.push({
+          name: "Home",
+        });
+      }
     };
 
     return {

@@ -134,13 +134,15 @@ export default {
 
     // this section is for deleting a record
     const handleDelete = async () => {
-      emit("toggle-loading");
-      await delProjectRecord(
-        route.params.project_number,
-        props.projectRecord.version_number
-      );
-      await emit("reload-records");
-      emit("toggle-loading");
+      if (confirm("Are you sure you want to delete?")) {
+        emit("toggle-loading");
+        await delProjectRecord(
+          route.params.project_number,
+          props.projectRecord.version_number
+        );
+        await emit("reload-records");
+        emit("toggle-loading");
+      }
     };
 
     // ***DO NOT DELETE*** for future referece
