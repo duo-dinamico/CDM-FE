@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="projects.length">
     <ProjectCard
       class="project-card"
       v-for="project in projects"
@@ -8,6 +8,7 @@
       @click="handleProjectSelect(project.project_number)"
     />
   </div>
+  <p v-else>No projects available</p>
 </template>
 
 <script>
@@ -25,6 +26,7 @@ export default {
         params: { project_number: project_number },
       });
     };
+
     return { handleProjectSelect };
   },
 };

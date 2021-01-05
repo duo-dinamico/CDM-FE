@@ -6,8 +6,8 @@
       :stageselect="stageSelect"
       :key="$route.fullPath"
       :projects="projects"
-      @reload="loadProjects"
-      v-if="projects.length"
+      @reload="toggleLoading"
+      v-if="!isLoading"
     />
     <Spinner v-else />
   </div>
@@ -18,12 +18,20 @@ import SecNavBar from "@/components/SecNavBar.vue";
 import NavBar from "@/components/NavBar";
 import Spinner from "@/components/Spinner";
 import getProjects from "@/composables/getProjects";
+import { ref } from "vue";
 
 export default {
   components: { NavBar, SecNavBar, Spinner },
   setup() {
     const { projects, loadProjects } = getProjects();
-    loadProjects();
+
+    const isLoading = ref(false);
+    const toggleLoading = async () => {
+      isLoading.value = true;
+      await loadProjects();
+      isLoading.value = false;
+    };
+    toggleLoading();
 
     const stageSelect = [
       "Approval in Principle",
@@ -41,7 +49,12 @@ export default {
       "Rail - GRIP 7 - As-Built Records",
     ];
 
-    return { projects, loadProjects, stageSelect };
+    return {
+      projects,
+      toggleLoading,
+      stageSelect,
+      isLoading,
+    };
   },
 };
 </script>
