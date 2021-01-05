@@ -57,10 +57,12 @@ export default {
     // error handling for the possibility that the version number already exists
     const versionError = ref("");
     const handleVersionError = (event) => {
-      if (props.versionlist.includes(event.target.value)) {
-        versionError.value = "Version number already exists";
-      } else {
-        versionError.value = "";
+      if (props.versionlist) {
+        if (props.versionlist.includes(event.target.value)) {
+          versionError.value = "Version number already exists";
+        } else {
+          versionError.value = "";
+        }
       }
     };
 

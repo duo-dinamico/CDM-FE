@@ -1,5 +1,6 @@
 <template>
-  <div class="project">
+  <Spinner v-if="isLoading" />
+  <div class="project" v-else>
     <form @submit.prevent="handleEditProject" id="editProjectForm"></form>
     <div v-if="!isEditing">
       <button @click="toggleProjectEditable">📝</button>
@@ -57,6 +58,7 @@
 <script>
 import removeProject from "@/composables/removeProject";
 import patchProject from "@/composables/patchProject";
+import Spinner from "@/components/Spinner";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import { ref, reactive, toRefs } from "vue";
@@ -64,9 +66,11 @@ import { ref, reactive, toRefs } from "vue";
 export default {
   props: ["project", "stageselect"],
   emits: ["reload", "reload-project"],
+  components: { Spinner },
   setup(props, { emit }) {
     // this section is for editing a project
     const isEditing = ref(false);
+    const isLoading = ref(false);
     const cachedProject = reactive({});
     Object.assign(cachedProject, props.project);
     const toggleProjectEditable = () => {
@@ -77,11 +81,11 @@ export default {
       isEditing.value = false;
     };
     const handleEditProject = async () => {
-      emit("toggle-loading");
-      await patchProject(route.params.project_number, props.project);
+      isLoading.value = true;
+      await patchProject(route.params.project_number, cachedProject);
       await emit("reload-project");
-      await emit("toggle-loading");
       isEditing.value = false;
+      isLoading.value = false;
     };
 
     // this function will delete a project from the db
@@ -101,6 +105,7 @@ export default {
       isEditing,
       toggleProjectEditable,
       cancelRecordEdit,
+      isLoading,
     };
   },
 };

@@ -99,7 +99,16 @@ export default {
 
     // this section is for editing a record
     const isEditing = ref(false);
-    const cachedProjectRecord = reactive({});
+    const cachedProjectRecord = reactive({
+      version_number: "",
+      stage_issued: "",
+      purpose: "",
+      date: "",
+      prepared: "",
+      checked: "",
+      approved: "",
+      remarks: "",
+    });
     if (props.projectRecord) {
       Object.assign(cachedProjectRecord, props.projectRecord);
     }
