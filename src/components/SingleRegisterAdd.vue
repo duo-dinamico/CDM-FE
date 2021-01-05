@@ -1,23 +1,20 @@
 <template>
   <tr>
+    <form @submit.prevent="handleClickAdd" id="new_risk"></form>
     <td>
-      <button @click="handleClickAdd">
+      <button form="new_risk">
         ➕
       </button>
     </td>
     <td>
-      <input
-        type="text"
-        form="new_risk"
-        v-model="newRegister.description"
-        required
-      />
+      <input type="text" form="new_risk" v-model="newRegister.description" />
     </td>
     <td>
       <select
         id="risk_status"
         form="new_risk"
         v-model="newRegister.risk_status"
+        required
       >
         <option value="ACTIVE">ACTIVE</option>
         <option value="RESOLVED">RESOLVED</option>
@@ -25,7 +22,12 @@
       </select>
     </td>
     <td>
-      <select id="discipline" form="new_risk" v-model="newRegister.discipline">
+      <select
+        id="discipline"
+        form="new_risk"
+        v-model="newRegister.discipline"
+        required
+      >
         <option
           v-for="discipline in disciplineList"
           :key="discipline"
@@ -48,6 +50,7 @@
         id="proj_lifecycle"
         form="new_risk"
         v-model="newRegister.project_lifecycle_stage"
+        required
       >
         <option value="C">C</option>
         <option value="O">O</option>
@@ -56,7 +59,7 @@
       </select>
     </td>
     <td>
-      <select id="hs_risk" form="new_risk" v-model="newRegister.hs_risk">
+      <select id="hs_risk" form="new_risk" v-model="newRegister.hs_risk" required>
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
@@ -66,6 +69,7 @@
         id="env_risk"
         form="new_risk"
         v-model="newRegister.environmental_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -76,19 +80,20 @@
         id="program_risk"
         form="new_risk"
         v-model="newRegister.programme_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
     <td>
-      <select id="other_risk" form="new_risk" v-model="newRegister.other_risk">
+      <select id="other_risk" form="new_risk" v-model="newRegister.other_risk" required>
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
     <td>
-      <select id="likelihood" form="new_risk" v-model="newRegister.likelihood">
+      <select id="likelihood" form="new_risk" v-model="newRegister.likelihood" required>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -97,7 +102,7 @@
       </select>
     </td>
     <td>
-      <select id="severity" form="new_risk" v-model="newRegister.severity">
+      <select id="severity" form="new_risk" v-model="newRegister.severity" required>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -111,7 +116,6 @@
         type="text"
         form="new_risk"
         v-model="newRegister.relevant_documentation"
-        required
       />
     </td>
     <td>
@@ -135,6 +139,7 @@
         id="likelihood_mit"
         form="new_risk"
         v-model="newRegister.likelihood_mitigated"
+        required
       >
         <option value="1">1</option>
         <option value="2">2</option>
@@ -148,6 +153,7 @@
         id="severity_mit"
         form="new_risk"
         v-model="newRegister.severity_mitigation"
+        required
       >
         <option value="1">1</option>
         <option value="2">2</option>
@@ -162,6 +168,7 @@
         id="further_action"
         form="new_risk"
         v-model="newRegister.further_action_required"
+        required
       >
         <option value="true">Y</option>
         <option value="false">N</option>

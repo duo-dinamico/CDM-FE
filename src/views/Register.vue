@@ -3,7 +3,6 @@
     <Spinner v-if="isLoading" />
     <div v-else>
       <h1>Registers for project {{ route.params.project_number }}</h1>
-      <form @submit.prevent="" id="new_risk"></form>
       <table class="register_table">
         <tr>
           <!-- 23 colunas -->

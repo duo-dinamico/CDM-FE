@@ -67,8 +67,9 @@
 
   <!-- if editing -->
   <tr v-if="isEdit">
+    <form @submit.prevent="handleSaveEdit" id="edit_risk"></form>
     <td>
-      <button @click="handleSaveEdit">
+      <button form="edit_risk">
         ✅
       </button>
       <button @click="handleCancelEdit">
@@ -78,16 +79,16 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.description"
-        required
       />
     </td>
     <td>
       <select
         id="risk_status"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.risk_status"
+        required
       >
         <option value="ACTIVE">ACTIVE</option>
         <option value="RESOLVED">RESOLVED</option>
@@ -97,8 +98,9 @@
     <td>
       <select
         id="discipline"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.discipline"
+        required
       >
         <option
           v-for="discipline in disciplineList"
@@ -112,7 +114,7 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.revision"
         required
       />
@@ -120,8 +122,9 @@
     <td>
       <select
         id="proj_lifecycle"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.project_lifecycle_stage"
+        required
       >
         <option value="C">C</option>
         <option value="O">O</option>
@@ -130,7 +133,7 @@
       </select>
     </td>
     <td>
-      <select id="hs_risk" form="new_risk" v-model="editedRegister.hs_risk">
+      <select id="hs_risk" form="edit_risk" v-model="editedRegister.hs_risk" required>
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
@@ -138,8 +141,9 @@
     <td>
       <select
         id="env_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.environmental_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -148,8 +152,9 @@
     <td>
       <select
         id="program_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.programme_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -158,8 +163,9 @@
     <td>
       <select
         id="other_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.other_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -168,8 +174,9 @@
     <td>
       <select
         id="likelihood"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.likelihood"
+        required
       >
         <option value="1">1</option>
         <option value="2">2</option>
@@ -179,7 +186,7 @@
       </select>
     </td>
     <td>
-      <select id="severity" form="new_risk" v-model="editedRegister.severity">
+      <select id="severity" form="edit_risk" v-model="editedRegister.severity" required>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -191,7 +198,7 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.relevant_documentation"
         required
       />
@@ -199,7 +206,7 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.owner_of_risk"
         required
       />
@@ -207,7 +214,7 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.mitigation_action"
         required
       />
@@ -215,8 +222,9 @@
     <td>
       <select
         id="likelihood_mit"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.likelihood_mitigated"
+        required
       >
         <option value="1">1</option>
         <option value="2">2</option>
@@ -228,8 +236,9 @@
     <td>
       <select
         id="severity_mit"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.severity_mitigation"
+        required
       >
         <option value="1">1</option>
         <option value="2">2</option>
@@ -242,8 +251,9 @@
     <td>
       <select
         id="further_action"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.further_action_required"
+        required
       >
         <option value="true">Y</option>
         <option value="false">N</option>
@@ -253,7 +263,7 @@
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.identified_by"
         required
       />
@@ -261,7 +271,7 @@
     <td>
       <input
         type="date"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.date"
         required
       />
