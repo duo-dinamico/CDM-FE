@@ -13,15 +13,20 @@
       <th>Remarks</th>
     </tr>
     <SingleProjectRecord
+      class="record-row"
       v-for="projectRecord in projectRecords"
       :key="projectRecord.record_id"
       :projectRecord="projectRecord"
+      :purposelist="purposeList"
       @reload-records="loadProjectRecords"
       @toggle-loading="toggleLoading"
     />
     <AddProjectRecord
       @reload-records="loadProjectRecords"
       @toggle-loading="toggleLoading"
+      :stage="stage"
+      :versionlist="versionNumberList"
+      :purposelist="purposeList"
     />
   </table>
 </template>
@@ -34,13 +39,28 @@ import AddProjectRecord from "@/components/AddProjectRecord";
 import { ref } from "vue";
 
 export default {
+  props: ["stage"],
   components: { Spinner, SingleProjectRecord, AddProjectRecord },
   setup() {
     // this section fetches all records from a project
-    const { projectRecords, loadProjectRecords } = getProjectRecords();
+    const {
+      projectRecords,
+      loadProjectRecords,
+      versionNumberList,
+    } = getProjectRecords();
     loadProjectRecords();
 
-    // this section related to the loading for all components
+    // array of all purpose status available
+    const purposeList = [
+      "Draft",
+      "Information",
+      "Acceptance",
+      "Approval",
+      "H&S File",
+      "Residual Risks",
+    ];
+
+    // this section related to the loading spinner for all components
     const isLoading = ref(false);
     const toggleLoading = () => {
       isLoading.value = !isLoading.value;
@@ -59,10 +79,31 @@ export default {
       loadProjectRecords,
       toggleLoading,
       isLoading,
+      versionNumberList,
+      purposeList,
     };
   },
 };
 </script>
 
 <style>
+table {
+  border: 0px;
+  border-collapse: collapse;
+}
+.record-row {
+  background: white;
+}
+.record-row:hover {
+  background: #dfdede8c;
+}
+input:disabled:hover {
+  background: #dfdede8c;
+}
+input:disabled {
+  background: white;
+  border: 0px solid white;
+  color: black;
+  font-size: 16px;
+}
 </style>
