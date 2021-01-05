@@ -3,6 +3,7 @@
     <NavBar :projects="projects" />
     <SecNavBar />
     <router-view
+      :stageselect="stageSelect"
       :key="$route.fullPath"
       :projects="projects"
       @reload="loadProjects"
@@ -22,10 +23,25 @@ export default {
   components: { NavBar, SecNavBar, Spinner },
   setup() {
     const { projects, loadProjects } = getProjects();
-
     loadProjects();
 
-    return { projects, loadProjects };
+    const stageSelect = [
+      "Approval in Principle",
+      "As-Built",
+      "Construction",
+      "Demolition",
+      "Detailed Design",
+      "Feasibility / Masterplanning",
+      "Operation / Maintenance",
+      "Outline Design",
+      "Rail - GRIP 3 - Option Selection",
+      "Rail - GRIP 4 - Approval in Principle",
+      "Rail - GRIP 5 - Detail Design / AFC",
+      "Rail - GRIP 6 - Construction on Site",
+      "Rail - GRIP 7 - As-Built Records",
+    ];
+
+    return { projects, loadProjects, stageSelect };
   },
 };
 </script>
