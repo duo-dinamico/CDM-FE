@@ -11,9 +11,9 @@
 
     <td :class="register.risk_status">{{ register.risk_status }}</td>
 
-    <td>{{ register.discipline }}</td>
-    <td>{{ register.risk_number }}</td>
-    <td>{{ register.revision }}</td>
+    <td class="center-cell">{{ register.discipline }}</td>
+    <td class="center-cell">{{ register.risk_number }}</td>
+    <td class="center-cell">{{ register.revision }}</td>
 
     <td :class="'stage-' + register.project_lifecycle_stage">
       {{ register.project_lifecycle_stage }}
@@ -34,8 +34,8 @@
     <td class="center-cell">{{ register.likelihood }}</td>
     <td class="center-cell">{{ register.severity }}</td>
 
-    <td :class="'risk-product-' + register.risk_product">
-      {{ register.risk_product }}
+    <td :class="'risk-product-' + riskProduct">
+      {{ riskProduct }}
     </td>
 
     <td>{{ register.relevant_documentation }}</td>
@@ -44,8 +44,8 @@
 
     <td class="center-cell">{{ register.likelihood_mitigated }}</td>
     <td class="center-cell">{{ register.severity_mitigation }}</td>
-    <td :class="'risk-product-' + register.risk_product">
-      {{ register.risk_product_mitigated }}
+    <td :class="'risk-product-' + riskProductMitigated">
+      {{ riskProductMitigated }}
     </td>
 
     <td v-if="register.further_action_required" class="Further-Y">Y</td>
@@ -66,7 +66,7 @@
   </tr>
 
   <!-- if editing -->
-  <tr v-if="isEdit">
+  <tr class="single_register_table" v-if="isEdit">
     <form @submit.prevent="handleSaveEdit" id="edit_risk"></form>
     <td>
       <button form="edit_risk">
@@ -76,7 +76,7 @@
         ↩
       </button>
     </td>
-    <td>
+    <td class="cell-input">
       <input
         type="text"
         form="edit_risk"
@@ -133,12 +133,17 @@
       </select>
     </td>
     <td>
-      <select id="hs_risk" form="edit_risk" v-model="editedRegister.hs_risk" required>
+      <select
+        id="hs_risk"
+        form="edit_risk"
+        v-model="editedRegister.hs_risk"
+        required
+      >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
-    <td>
+    <td class="cell-input">
       <select
         id="env_risk"
         form="edit_risk"
@@ -178,29 +183,29 @@
         v-model="editedRegister.likelihood"
         required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
-      <select id="severity" form="edit_risk" v-model="editedRegister.severity" required>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+      <select
+        id="severity"
+        form="edit_risk"
+        v-model="editedRegister.severity"
+        required
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+    <td :class="'risk-product-' + riskProduct">{{ riskProduct }}</td>
     <td>
       <input
         type="text"
         form="edit_risk"
         v-model="editedRegister.relevant_documentation"
-        required
       />
     </td>
     <td>
@@ -211,7 +216,7 @@
         required
       />
     </td>
-    <td>
+    <td class="cell-input">
       <input
         type="text"
         form="edit_risk"
@@ -226,11 +231,9 @@
         v-model="editedRegister.likelihood_mitigated"
         required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
@@ -240,14 +243,14 @@
         v-model="editedRegister.severity_mitigation"
         required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+    <td :class="'risk-product-' + riskProductMitigated">
+      {{ riskProductMitigated }}
+    </td>
     <td>
       <select
         id="further_action"
@@ -259,7 +262,15 @@
         <option value="false">N</option>
       </select>
     </td>
-    <td></td>
+    <td class="center-cell">
+      {{
+        !editedRegister.description
+          ? ""
+          : editedRegister.further_action_required === "true"
+          ? "TBC"
+          : ""
+      }}
+    </td>
     <td>
       <input
         type="text"
@@ -282,7 +293,7 @@
 <script>
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export default {
   props: ["register"],
@@ -333,6 +344,8 @@ export default {
       "STR",
     ];
 
+    const One2FiveList = ["1", "2", "3", "4", "5"];
+
     const isEdit = ref(false);
     const { delRegister, patchRegister } = Registers();
 
@@ -378,6 +391,43 @@ export default {
       isEdit.value = !isEdit.value;
     };
 
+    const riskProduct = computed(() => {
+      let product = 0;
+      if (!isEdit.value) {
+        product = props.register.likelihood * props.register.severity;
+      } else {
+        product =
+          editedRegister.value.likelihood * editedRegister.value.severity;
+      }
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
+    const riskProductMitigated = computed(() => {
+      let product = 0;
+      if (!isEdit.value) {
+        product =
+          props.register.likelihood_mitigated *
+          props.register.severity_mitigation;
+      } else {
+        product =
+          editedRegister.value.likelihood_mitigated *
+          editedRegister.value.severity_mitigation;
+      }
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
     return {
       handleClickEdit,
       handleClickDelete,
@@ -386,17 +436,21 @@ export default {
       handleCancelEdit,
       handleSaveEdit,
       disciplineList,
+      riskProduct,
+      riskProductMitigated,
+      One2FiveList,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 .single_register_table td {
   background: lightgray;
   border: 1px solid;
   text-align: left;
   vertical-align: middle;
+  padding: 0;
 }
 
 /* risk status styles */
@@ -508,6 +562,13 @@ export default {
   color: black;
   text-align: center;
   font-weight: bold;
+}
+
+.single_register_table .cell-input input,
+select {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .single_register_table td:hover {
