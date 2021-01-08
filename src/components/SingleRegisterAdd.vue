@@ -1,23 +1,20 @@
 <template>
-  <tr>
+  <tr class="single_register_table">
+    <form @submit.prevent="handleClickAdd" id="new_risk"></form>
     <td>
-      <button @click="handleClickAdd">
+      <button form="new_risk">
         ➕
       </button>
     </td>
-    <td>
-      <input
-        type="text"
-        form="new_risk"
-        v-model="newRegister.description"
-        required
-      />
+    <td class="cell-input">
+      <input type="text" form="new_risk" v-model="newRegister.description" />
     </td>
     <td>
       <select
         id="risk_status"
         form="new_risk"
         v-model="newRegister.risk_status"
+        required
       >
         <option value="ACTIVE">ACTIVE</option>
         <option value="RESOLVED">RESOLVED</option>
@@ -25,27 +22,18 @@
       </select>
     </td>
     <td>
-      <select id="discipline" form="new_risk" v-model="newRegister.discipline">
-        <option value="GEN">GEN</option>
-        <option value="MULTI">MULTI</option>
-        <option value="OTHER">OTHER</option>
-        <option value="ACOU">ACOU</option>
-        <option value="ARCH">ARCH</option>
-        <option value="CIV">CIV</option>
-        <option value="ELEC">ELEC</option>
-        <option value="FACM">FACM</option>
-        <option value="FCDE">FCDE</option>
-        <option value="FIN">FIN</option>
-        <option value="FIRE">FIRE</option>
-        <option value="M&E">M&E</option>
-        <option value="MECH">MECH</option>
-        <option value="PM">PM</option>
-        <option value="R-3R">R-3R</option>
-        <option value="R-OLE">R-OLE</option>
-        <option value="R-PH">R-PH</option>
-        <option value="R-PS">R-PS</option>
-        <option value="R-PW">R-PW</option>
-        <option value="STR">STR</option>
+      <select
+        id="discipline"
+        form="new_risk"
+        v-model="newRegister.discipline"
+        required
+      >
+        <option
+          v-for="discipline in disciplineList"
+          :key="discipline"
+          :value="discipline"
+          >{{ discipline }}</option
+        >
       </select>
     </td>
     <td></td>
@@ -62,6 +50,7 @@
         id="proj_lifecycle"
         form="new_risk"
         v-model="newRegister.project_lifecycle_stage"
+        required
       >
         <option value="C">C</option>
         <option value="O">O</option>
@@ -70,7 +59,12 @@
       </select>
     </td>
     <td>
-      <select id="hs_risk" form="new_risk" v-model="newRegister.hs_risk">
+      <select
+        id="hs_risk"
+        form="new_risk"
+        v-model="newRegister.hs_risk"
+        required
+      >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
@@ -80,6 +74,7 @@
         id="env_risk"
         form="new_risk"
         v-model="newRegister.environmental_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -90,42 +85,55 @@
         id="program_risk"
         form="new_risk"
         v-model="newRegister.programme_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
     <td>
-      <select id="other_risk" form="new_risk" v-model="newRegister.other_risk">
+      <select
+        id="other_risk"
+        form="new_risk"
+        v-model="newRegister.other_risk"
+        required
+      >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
     <td>
-      <select id="likelihood" form="new_risk" v-model="newRegister.likelihood">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+      <select
+        id="likelihood"
+        form="new_risk"
+        v-model="newRegister.likelihood"
+        required
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
-      <select id="severity" form="new_risk" v-model="newRegister.severity">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+      <select
+        id="severity"
+        form="new_risk"
+        v-model="newRegister.severity"
+        required
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+
+    <td :class="'risk-product-' + riskProduct">{{ riskProduct }}</td>
+
     <td>
       <input
         type="text"
         form="new_risk"
         v-model="newRegister.relevant_documentation"
-        required
       />
     </td>
     <td>
@@ -136,7 +144,7 @@
         required
       />
     </td>
-    <td>
+    <td class="cell-input">
       <input
         type="text"
         form="new_risk"
@@ -149,12 +157,11 @@
         id="likelihood_mit"
         form="new_risk"
         v-model="newRegister.likelihood_mitigated"
+        required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
@@ -162,26 +169,37 @@
         id="severity_mit"
         form="new_risk"
         v-model="newRegister.severity_mitigation"
+        required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+
+    <td :class="'risk-product-' + riskProductMitigated">
+      {{ riskProductMitigated }}
+    </td>
     <td>
       <select
         id="further_action"
         form="new_risk"
         v-model="newRegister.further_action_required"
+        required
       >
         <option value="true">Y</option>
         <option value="false">N</option>
       </select>
     </td>
-    <td></td>
+    <td class="center-cell">
+      {{
+        !newRegister.description
+          ? ""
+          : newRegister.further_action_required === "true"
+          ? "TBC"
+          : ""
+      }}
+    </td>
     <td>
       <input
         type="text"
@@ -197,7 +215,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
 export default {
@@ -227,6 +245,31 @@ export default {
       date: "",
     });
 
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
+
+    const One2FiveList = ["1", "2", "3", "4", "5"];
+
     const { addRegister } = Registers();
 
     const route = useRoute();
@@ -247,9 +290,170 @@ export default {
       isLoading.value = false;
     };
 
-    return { newRegister, handleClickAdd };
+    const riskProduct = computed(() => {
+      let product = newRegister.value.likelihood * newRegister.value.severity;
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
+    const riskProductMitigated = computed(() => {
+      let product =
+        newRegister.value.likelihood_mitigated *
+        newRegister.value.severity_mitigation;
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
+    return {
+      newRegister,
+      handleClickAdd,
+      disciplineList,
+      One2FiveList,
+      riskProduct,
+      riskProductMitigated,
+    };
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.single_register_table td {
+  background: lightgray;
+  border: 1px solid;
+  text-align: left;
+  vertical-align: middle;
+  padding: 0;
+}
+
+/* risk status styles */
+.single_register_table .ACTIVE {
+  background: red;
+  color: white;
+  font-weight: bold;
+}
+.single_register_table .RESOLVED {
+  background: white;
+  color: green;
+  font-weight: bold;
+}
+.single_register_table .CONTINUED {
+  background: white;
+  color: rgb(78, 4, 100);
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* risk lifecycle-stage styles */
+.single_register_table .stage-C {
+  background: rgb(86, 157, 238);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-O {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-M {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .stage-D {
+  background: rgb(186, 233, 241);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk H&S styles */
+.single_register_table .HS-H {
+  /* background: rgb(86, 157, 238); */
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Environment styles */
+.single_register_table .Env-E {
+  /* background: rgb(86, 157, 238); */
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Programme styles */
+.single_register_table .Prog-P {
+  /* background: rgb(86, 157, 238); */
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Other styles */
+.single_register_table .Other-O {
+  /* background: rgb(86, 157, 238); */
+  color: rgb(80, 163, 231);
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Centered Cells styles */
+.single_register_table .center-cell {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Risk Product styles */
+.single_register_table .risk-product-L {
+  background: white;
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .risk-product-M {
+  background: orange;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+.single_register_table .risk-product-H {
+  background: red;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* risk Further styles */
+.single_register_table .Further-Y {
+  background: rgb(220, 233, 149);
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+.single_register_table .cell-input input,
+select {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.single_register_table td:hover {
+  /* background: #f5f5f5; */
+}
+</style>

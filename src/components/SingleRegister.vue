@@ -11,9 +11,9 @@
 
     <td :class="register.risk_status">{{ register.risk_status }}</td>
 
-    <td>{{ register.discipline }}</td>
-    <td>{{ register.risk_number }}</td>
-    <td>{{ register.revision }}</td>
+    <td class="center-cell">{{ register.discipline }}</td>
+    <td class="center-cell">{{ register.risk_number }}</td>
+    <td class="center-cell">{{ register.revision }}</td>
 
     <td :class="'stage-' + register.project_lifecycle_stage">
       {{ register.project_lifecycle_stage }}
@@ -31,54 +31,64 @@
     <td v-if="register.other_risk" class="Other-O">O</td>
     <td v-else></td>
 
-    <td class="numbers">{{ register.likelihood }}</td>
-    <td class="numbers">{{ register.severity }}</td>
+    <td class="center-cell">{{ register.likelihood }}</td>
+    <td class="center-cell">{{ register.severity }}</td>
 
-    <td :class="'risk-product-' + register.risk_product">
-      {{ register.risk_product }}
+    <td :class="'risk-product-' + riskProduct">
+      {{ riskProduct }}
     </td>
 
     <td>{{ register.relevant_documentation }}</td>
     <td>{{ register.owner_of_risk }}</td>
     <td>{{ register.mitigation_action }}</td>
 
-    <td class="numbers">{{ register.likelihood_mitigated }}</td>
-    <td class="numbers">{{ register.severity_mitigation }}</td>
-    <td :class="'risk-product-' + register.risk_product">
-      {{ register.risk_product_mitigated }}
+    <td class="center-cell">{{ register.likelihood_mitigated }}</td>
+    <td class="center-cell">{{ register.severity_mitigation }}</td>
+    <td :class="'risk-product-' + riskProductMitigated">
+      {{ riskProductMitigated }}
     </td>
 
     <td v-if="register.further_action_required" class="Further-Y">Y</td>
-    <td v-else class="numbers">N</td>
+    <td v-else class="center-cell">N</td>
 
-    <td></td>
+    <td class="center-cell">
+      {{
+        !register.description
+          ? ""
+          : register.further_action_required
+          ? "TBC"
+          : ""
+      }}
+    </td>
+
     <td>{{ register.identified_by }}</td>
     <td>{{ register.date.substring(0, 10) }}</td>
   </tr>
 
   <!-- if editing -->
-  <tr v-if="isEdit">
+  <tr class="single_register_table" v-if="isEdit">
+    <form @submit.prevent="handleSaveEdit" id="edit_risk"></form>
     <td>
-      <button @click="handleSaveEdit">
+      <button form="edit_risk">
         ✅
       </button>
       <button @click="handleCancelEdit">
         ↩
       </button>
     </td>
-    <td>
+    <td class="cell-input">
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.description"
-        required
       />
     </td>
     <td>
       <select
         id="risk_status"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.risk_status"
+        required
       >
         <option value="ACTIVE">ACTIVE</option>
         <option value="RESOLVED">RESOLVED</option>
@@ -88,36 +98,23 @@
     <td>
       <select
         id="discipline"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.discipline"
+        required
       >
-        <option value="GEN">GEN</option>
-        <option value="MULTI">MULTI</option>
-        <option value="OTHER">OTHER</option>
-        <option value="ACOU">ACOU</option>
-        <option value="ARCH">ARCH</option>
-        <option value="CIV">CIV</option>
-        <option value="ELEC">ELEC</option>
-        <option value="FACM">FACM</option>
-        <option value="FCDE">FCDE</option>
-        <option value="FIN">FIN</option>
-        <option value="FIRE">FIRE</option>
-        <option value="M&E">M&E</option>
-        <option value="MECH">MECH</option>
-        <option value="PM">PM</option>
-        <option value="R-3R">R-3R</option>
-        <option value="R-OLE">R-OLE</option>
-        <option value="R-PH">R-PH</option>
-        <option value="R-PS">R-PS</option>
-        <option value="R-PW">R-PW</option>
-        <option value="STR">STR</option>
+        <option
+          v-for="discipline in disciplineList"
+          :key="discipline"
+          :value="discipline"
+          >{{ discipline }}</option
+        >
       </select>
     </td>
     <td></td>
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.revision"
         required
       />
@@ -125,8 +122,9 @@
     <td>
       <select
         id="proj_lifecycle"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.project_lifecycle_stage"
+        required
       >
         <option value="C">C</option>
         <option value="O">O</option>
@@ -135,16 +133,22 @@
       </select>
     </td>
     <td>
-      <select id="hs_risk" form="new_risk" v-model="editedRegister.hs_risk">
+      <select
+        id="hs_risk"
+        form="edit_risk"
+        v-model="editedRegister.hs_risk"
+        required
+      >
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
     </td>
-    <td>
+    <td class="cell-input">
       <select
         id="env_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.environmental_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -153,8 +157,9 @@
     <td>
       <select
         id="program_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.programme_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -163,8 +168,9 @@
     <td>
       <select
         id="other_risk"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.other_risk"
+        required
       >
         <option value="true">True</option>
         <option value="false">False</option>
@@ -173,46 +179,47 @@
     <td>
       <select
         id="likelihood"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.likelihood"
+        required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
-      <select id="severity" form="new_risk" v-model="editedRegister.severity">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+      <select
+        id="severity"
+        form="edit_risk"
+        v-model="editedRegister.severity"
+        required
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+    <td :class="'risk-product-' + riskProduct">{{ riskProduct }}</td>
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.relevant_documentation"
-        required
       />
     </td>
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.owner_of_risk"
         required
       />
     </td>
-    <td>
+    <td class="cell-input">
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.mitigation_action"
         required
       />
@@ -220,45 +227,54 @@
     <td>
       <select
         id="likelihood_mit"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.likelihood_mitigated"
+        required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
     <td>
       <select
         id="severity_mit"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.severity_mitigation"
+        required
       >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
       </select>
     </td>
-    <td></td>
+    <td :class="'risk-product-' + riskProductMitigated">
+      {{ riskProductMitigated }}
+    </td>
     <td>
       <select
         id="further_action"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.further_action_required"
+        required
       >
         <option value="true">Y</option>
         <option value="false">N</option>
       </select>
     </td>
-    <td></td>
+    <td class="center-cell">
+      {{
+        !editedRegister.description
+          ? ""
+          : editedRegister.further_action_required === "true"
+          ? "TBC"
+          : ""
+      }}
+    </td>
     <td>
       <input
         type="text"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.identified_by"
         required
       />
@@ -266,7 +282,7 @@
     <td>
       <input
         type="date"
-        form="new_risk"
+        form="edit_risk"
         v-model="editedRegister.date"
         required
       />
@@ -277,7 +293,7 @@
 <script>
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export default {
   props: ["register"],
@@ -304,6 +320,31 @@ export default {
       identified_by: "",
       date: "",
     });
+
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
+
+    const One2FiveList = ["1", "2", "3", "4", "5"];
 
     const isEdit = ref(false);
     const { delRegister, patchRegister } = Registers();
@@ -350,6 +391,43 @@ export default {
       isEdit.value = !isEdit.value;
     };
 
+    const riskProduct = computed(() => {
+      let product = 0;
+      if (!isEdit.value) {
+        product = props.register.likelihood * props.register.severity;
+      } else {
+        product =
+          editedRegister.value.likelihood * editedRegister.value.severity;
+      }
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
+    const riskProductMitigated = computed(() => {
+      let product = 0;
+      if (!isEdit.value) {
+        product =
+          props.register.likelihood_mitigated *
+          props.register.severity_mitigation;
+      } else {
+        product =
+          editedRegister.value.likelihood_mitigated *
+          editedRegister.value.severity_mitigation;
+      }
+      if (product < 4) {
+        return "L";
+      } else if (product < 10) {
+        return "M";
+      } else {
+        return "H";
+      }
+    });
+
     return {
       handleClickEdit,
       handleClickDelete,
@@ -357,17 +435,22 @@ export default {
       editedRegister,
       handleCancelEdit,
       handleSaveEdit,
+      disciplineList,
+      riskProduct,
+      riskProductMitigated,
+      One2FiveList,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 .single_register_table td {
   background: lightgray;
   border: 1px solid;
   text-align: left;
   vertical-align: middle;
+  padding: 0;
 }
 
 /* risk status styles */
@@ -446,8 +529,8 @@ export default {
   font-weight: bold;
 }
 
-/* risk Numbers styles */
-.single_register_table .numbers {
+/* risk Centered Cells styles */
+.single_register_table .center-cell {
   color: black;
   text-align: center;
   font-weight: bold;
@@ -479,6 +562,13 @@ export default {
   color: black;
   text-align: center;
   font-weight: bold;
+}
+
+.single_register_table .cell-input input,
+select {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .single_register_table td:hover {

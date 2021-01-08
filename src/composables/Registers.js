@@ -14,48 +14,31 @@ const Registers = () => {
       let res = await axios.get(
         `https://cdm-be.herokuapp.com/api/project/${project_number}/register`
       );
-      registers.value = res.data.risks;
-
-      // Add a new key pair to each register
-      for (let [index, reg] of registers.value.entries()) {
-        // console.log(index, reg)
-        let new_risk_number = 1;
-        if (index > 0) {
-          for (let i = 0; i < index; i++) {
-            // console.log(i, reg.discipline, registers.value[i].discipline);
-            if (
-              reg.discipline == registers.value[i].discipline &&
-              reg.project_lifecycle_stage ==
-                registers.value[i].project_lifecycle_stage
-            ) {
-              new_risk_number++;
-              // console.log("yes: ", new_risk_number);
+      if (!res.data.msg) {
+        registers.value = res.data.risks;
+        // Add a new key pair to each register
+        for (let [index, reg] of registers.value.entries()) {
+          let new_risk_number = 1;
+          if (index > 0) {
+            for (let i = 0; i < index; i++) {
+              if (
+                reg.discipline == registers.value[i].discipline &&
+                reg.project_lifecycle_stage ==
+                  registers.value[i].project_lifecycle_stage
+              ) {
+                new_risk_number++;
+              }
             }
           }
-        }
-        reg.risk_number =
-          reg.discipline +
-          "-" +
-          reg.project_lifecycle_stage +
-          "-" +
-          new_risk_number.toString().padStart(3, "0");
+          reg.risk_number =
+            reg.discipline +
+            "-" +
+            reg.project_lifecycle_stage +
+            "-" +
+            new_risk_number.toString().padStart(3, "0");
 
-        // Calculate risk product
-        if (reg.likelihood * reg.severity < 4) {
-          reg.risk_product = "L";
-        } else if (reg.likelihood * reg.severity < 10) {
-          reg.risk_product = "M";
-        } else {
-          reg.risk_product = "H";
-        }
-
-        // Calculate risk product mitigation
-        if (reg.likelihood_mitigated * reg.severity_mitigation < 4) {
-          reg.risk_product_mitigated = "L";
-        } else if (reg.likelihood_mitigated * reg.severity_mitigation < 10) {
-          reg.risk_product_mitigated = "M";
-        } else {
-          reg.risk_product_mitigated = "H";
+          // Convert date to format YYYY-MM-DD
+          reg.date = reg.date.substring(0, 10);
         }
       }
     } catch (err) {
