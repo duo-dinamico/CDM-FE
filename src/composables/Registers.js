@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 const Registers = () => {
   const registers = ref([]);
+  const risk = ref({});
 
   const loadRegisters = async (project_number) => {
     // artificially simulating delay
@@ -40,6 +41,24 @@ const Registers = () => {
           // Convert date to format YYYY-MM-DD
           reg.date = reg.date.substring(0, 10);
         }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const loadSingleRisk = async (project_number, register_id) => {
+    // artificially simulating delay
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    try {
+      let res = await axios.get(
+        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${register_id}`
+      );
+      if (!res.data.msg) {
+        risk.value = res.data.risk;
       }
     } catch (err) {
       console.log(err);
@@ -97,7 +116,14 @@ const Registers = () => {
     }
   };
 
-  return { registers, loadRegisters, addRegister, delRegister, patchRegister };
+  return {
+    registers,
+    loadRegisters,
+    addRegister,
+    delRegister,
+    patchRegister,
+    loadSingleRisk,
+  };
 };
 
 export default Registers;

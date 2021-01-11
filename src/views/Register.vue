@@ -5,8 +5,9 @@
       <h1>Registers for project {{ route.params.project_number }}</h1>
       <table class="register_table">
         <tr>
-          <!-- 23 colunas -->
-          <th>Registers</th>
+          <!-- 6 colunas -->
+          <th v-for="header in headers" :key="header">{{ header }}</th>
+          <!-- <th>Registers</th>
           <th>Description of risk or hazard</th>
           <th>Risk status</th>
           <th>Discipline</th>
@@ -29,7 +30,7 @@
           <th>Further action required</th>
           <th>Continuation Risk reference (calculated)</th>
           <th>Identified by</th>
-          <th>Date</th>
+          <th>Date</th> -->
         </tr>
 
         <!-- Call Single Register Component with a for loop -->
@@ -43,11 +44,11 @@
         />
 
         <!-- Add new line -->
-        <SingleRegisterAdd
+        <!-- <SingleRegisterAdd
           @reloadregisters="reloadregisters"
           :disciplineList="disciplineList"
           :One2FiveList="One2FiveList"
-        />
+        /> -->
       </table>
     </div>
   </div>
@@ -56,13 +57,12 @@
 <script>
 import Registers from "@/composables/Registers";
 import SingleRegister from "@/components/SingleRegister";
-import SingleRegisterAdd from "@/components/SingleRegisterAdd";
 import Spinner from "@/components/Spinner";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 export default {
-  components: { SingleRegister, Spinner, SingleRegisterAdd },
+  components: { SingleRegister, Spinner },
   setup() {
     const route = useRoute();
     const isLoading = ref(false);
@@ -90,6 +90,15 @@ export default {
       "STR",
     ];
 
+    const headers = [
+      "Registers",
+      "Description of risk or hazard",
+      "Risk status",
+      "Discipline",
+      "Risk number",
+      "Revision",
+    ];
+
     const One2FiveList = ["1", "2", "3", "4", "5"];
 
     const { registers, loadRegisters } = Registers();
@@ -109,6 +118,7 @@ export default {
       isLoading,
       disciplineList,
       One2FiveList,
+      headers,
     };
   },
 };

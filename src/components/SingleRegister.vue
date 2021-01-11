@@ -2,9 +2,7 @@
   <!-- if not editing -->
   <tr class="single_register_table" v-if="!isEdit">
     <td>
-      <button @click="handleClickEdit">
-        📝
-      </button>
+      <button @click="handleClickEdit">📝</button>
       <button @click="handleClickDelete">❌</button>
     </td>
     <td>{{ register.description }}</td>
@@ -14,7 +12,7 @@
     <td class="center-cell">{{ register.discipline }}</td>
     <td class="center-cell">{{ register.risk_number }}</td>
     <td class="center-cell">{{ register.revision }}</td>
-
+    <!-- 
     <td :class="'stage-' + register.project_lifecycle_stage">
       {{ register.project_lifecycle_stage }}
     </td>
@@ -63,18 +61,16 @@
 
     <td>{{ register.identified_by }}</td>
     <td>{{ register.date.substring(0, 10) }}</td>
-  </tr>
+  </tr> -->
 
-  <!-- if editing -->
+    <!-- if editing -->
+  </tr>
+  <!-- 
   <tr class="single_register_table" v-if="isEdit">
     <form @submit.prevent="handleSaveEdit" id="edit_risk"></form>
     <td>
-      <button form="edit_risk">
-        ✅
-      </button>
-      <button @click="handleCancelEdit">
-        ↩
-      </button>
+      <button form="edit_risk">✅</button>
+      <button @click="handleCancelEdit">↩</button>
     </td>
     <td class="cell-input">
       <input
@@ -106,8 +102,9 @@
           v-for="discipline in disciplineList"
           :key="discipline"
           :value="discipline"
-          >{{ discipline }}</option
         >
+          {{ discipline }}
+        </option>
       </select>
     </td>
     <td></td>
@@ -287,13 +284,14 @@
         required
       />
     </td>
-  </tr>
+  </tr> -->
 </template>
 
 <script>
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
+import router from "@/router";
 
 export default {
   props: ["register", "disciplineList", "One2FiveList"],
@@ -326,14 +324,24 @@ export default {
 
     const route = useRoute();
 
-    const handleClickEdit = () => {
-      // Change to edit mode
-      isEdit.value = !isEdit.value;
+    // const handleClickEdit = () => {
+    //   // Change to edit mode
+    //   isEdit.value = !isEdit.value;
 
-      // copy data to the editedRegister
-      for (let key in editedRegister.value) {
-        editedRegister.value[key] = props.register[key];
-      }
+    //   // copy data to the editedRegister
+    //   for (let key in editedRegister.value) {
+    //     editedRegister.value[key] = props.register[key];
+    //   }
+    // };
+
+    const handleClickEdit = () => {
+      router.push({
+        name: "Risk",
+        params: {
+          risk_number: props.register.risk_number,
+          register_id: props.register.register_id,
+        },
+      });
     };
 
     const handleClickDelete = async () => {
