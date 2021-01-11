@@ -62,7 +62,7 @@ const Registers = () => {
     }
   };
 
-  const delRegister = async (project_number, risk_number) => {
+  const delRegister = async (project_number, register_id) => {
     // artificially simulating delay
     await new Promise((resolve) => {
       setTimeout(resolve, 1000);
@@ -70,7 +70,7 @@ const Registers = () => {
 
     try {
       await axios.delete(
-        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${risk_number}`
+        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${register_id}`
       );
     } catch (err) {
       console.log(err);
@@ -79,7 +79,7 @@ const Registers = () => {
 
   const patchRegister = async (
     project_number,
-    risk_number,
+    register_id,
     edited_register
   ) => {
     // artificially simulating delay
@@ -89,7 +89,7 @@ const Registers = () => {
 
     try {
       await axios.patch(
-        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${risk_number}`,
+        `https://cdm-be.herokuapp.com/api/project/${project_number}/register/${register_id}`,
         { ...edited_register }
       );
     } catch (err) {
