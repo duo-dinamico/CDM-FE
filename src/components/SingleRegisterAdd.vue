@@ -219,7 +219,7 @@ import { computed, ref } from "vue";
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
 export default {
-  props: [],
+  props: ["disciplineList", "One2FiveList"],
   emits: ["reloadregisters"],
   setup(_, { emit }) {
     const isLoading = ref(false);
@@ -244,31 +244,6 @@ export default {
       identified_by: "",
       date: "",
     });
-
-    const disciplineList = [
-      "GEN",
-      "MULTI",
-      "OTHER",
-      "ACOU",
-      "ARCH",
-      "CIV",
-      "ELEC",
-      "FACM",
-      "FCDE",
-      "FIN",
-      "FIRE",
-      "M&E",
-      "MECH",
-      "PM",
-      "R-3R",
-      "R-OLE",
-      "R-PH",
-      "R-PS",
-      "R-PW",
-      "STR",
-    ];
-
-    const One2FiveList = ["1", "2", "3", "4", "5"];
 
     const { addRegister } = Registers();
 
@@ -317,8 +292,6 @@ export default {
     return {
       newRegister,
       handleClickAdd,
-      disciplineList,
-      One2FiveList,
       riskProduct,
       riskProductMitigated,
     };

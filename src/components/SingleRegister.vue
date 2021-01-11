@@ -296,7 +296,7 @@ import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 
 export default {
-  props: ["register"],
+  props: ["register", "disciplineList", "One2FiveList"],
   emits: ["reloadregisters"],
   setup(props, { emit }) {
     const editedRegister = ref({
@@ -320,31 +320,6 @@ export default {
       identified_by: "",
       date: "",
     });
-
-    const disciplineList = [
-      "GEN",
-      "MULTI",
-      "OTHER",
-      "ACOU",
-      "ARCH",
-      "CIV",
-      "ELEC",
-      "FACM",
-      "FCDE",
-      "FIN",
-      "FIRE",
-      "M&E",
-      "MECH",
-      "PM",
-      "R-3R",
-      "R-OLE",
-      "R-PH",
-      "R-PS",
-      "R-PW",
-      "STR",
-    ];
-
-    const One2FiveList = ["1", "2", "3", "4", "5"];
 
     const isEdit = ref(false);
     const { delRegister, patchRegister } = Registers();
@@ -437,10 +412,8 @@ export default {
       editedRegister,
       handleCancelEdit,
       handleSaveEdit,
-      disciplineList,
       riskProduct,
       riskProductMitigated,
-      One2FiveList,
     };
   },
 };

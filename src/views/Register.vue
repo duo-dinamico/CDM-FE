@@ -38,10 +38,16 @@
           :key="register.register_id"
           :register="register"
           @reloadregisters="reloadregisters"
+          :disciplineList="disciplineList"
+          :One2FiveList="One2FiveList"
         />
 
         <!-- Add new line -->
-        <SingleRegisterAdd @reloadregisters="reloadregisters" />
+        <SingleRegisterAdd
+          @reloadregisters="reloadregisters"
+          :disciplineList="disciplineList"
+          :One2FiveList="One2FiveList"
+        />
       </table>
     </div>
   </div>
@@ -61,6 +67,31 @@ export default {
     const route = useRoute();
     const isLoading = ref(false);
 
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
+
+    const One2FiveList = ["1", "2", "3", "4", "5"];
+
     const { registers, loadRegisters } = Registers();
 
     loadRegisters(route.params.project_number);
@@ -76,6 +107,8 @@ export default {
       route,
       reloadregisters,
       isLoading,
+      disciplineList,
+      One2FiveList,
     };
   },
 };
