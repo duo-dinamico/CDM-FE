@@ -337,11 +337,13 @@ export default {
     };
 
     const handleClickDelete = async () => {
-      await delRegister(
-        route.params.project_number,
-        props.register.risk_number
-      );
-      await emit("reloadregisters");
+      if (confirm("Are you sure you want to delete?")) {
+        await delRegister(
+          route.params.project_number,
+          props.register.register_id
+        );
+        await emit("reloadregisters");
+      }
     };
 
     const handleCancelEdit = () => {
@@ -357,7 +359,7 @@ export default {
     const handleSaveEdit = async () => {
       await patchRegister(
         route.params.project_number,
-        props.register.risk_number,
+        props.register.register_id,
         editedRegister.value
       );
 
