@@ -60,11 +60,15 @@ export default {
 </script>
 
 <style>
+:root {
+  --very-dark: #dfdede8c;
+}
+
 #app {
   display: inline-flexbox;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   margin: 0 0 0 0;
-  background: #dfdede8c;
+  background: var(--very-dark);
   width: 100vw;
   height: 100vh;
 }
