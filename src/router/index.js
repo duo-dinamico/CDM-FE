@@ -4,6 +4,7 @@ import Project from "@/views/Project.vue";
 import Register from "@/views/Register.vue";
 import NotFound from "@/views/NotFound.vue";
 import AddNewProject from "@/views/AddNewProject.vue";
+import Risk from "@/views/Risk.vue";
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
     path: "/project/:project_number/register",
     name: "Register",
     component: Register,
+  },
+  {
+    path: "/project/:project_number/register/:risk_number",
+    name: "Risk",
+    component: Risk,
+    props: true,
   },
   {
     path: "/add_project",
