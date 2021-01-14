@@ -1,33 +1,32 @@
 <template>
-  <h1 v-if="$route.params.register_id">{{ risk.risk_number }}</h1>
+  <h1>{{ risk.description }}</h1>
 </template>
 
 <script>
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
-import router from "@/router";
+import { ref } from "vue";
 
 export default {
   setup() {
     // route variable for route related actions
     const route = useRoute();
 
-    console.log(route.params.register_id);
+    const { registers, risk, loadRegisters, loadSingleRisk } = Registers();
 
-    if (route.params.register_id) {
-      const { risk, loadSingleRisk } = Registers();
-      loadSingleRisk(route.params.project_number, route.params.register_id);
-      console.log(risk.value);
+    const lookupRisk = async () => {
+      const register_id = ref(0);
+      await loadRegisters(route.params.project_number);
+      for (let register of registers.value) {
+        if (register.risk_number === route.params.risk_number) {
+          register_id.value = register.register_id;
+        }
+      }
+      await loadSingleRisk(route.params.project_number, register_id.value);
+    };
+    lookupRisk();
 
-      return { loadSingleRisk, risk };
-    } else {
-      router.push({
-        name: "Register",
-        params: {
-          project_number: route.params.project_number,
-        },
-      });
-    }
+    return { loadSingleRisk, risk };
   },
 };
 </script>

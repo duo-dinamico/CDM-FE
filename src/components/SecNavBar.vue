@@ -3,12 +3,16 @@
     <router-link v-if="route.name === 'Home'" :to="{ name: 'Add New Project' }"
       >Add New Project</router-link
     >
-    <router-link v-if="route.name === 'Project'" :to="{ name: 'Register' }">
-      Master Register</router-link
+    <div
+      v-if="
+        route.name === 'Project' ||
+        route.name === 'Register' ||
+        route.name === 'Risk'
+      "
     >
-    <router-link v-if="route.name === 'Register'" :to="{ name: 'Project' }">
-      Master Record</router-link
-    >
+      <router-link :to="{ name: 'Register' }"> Master Register</router-link>
+      <router-link :to="{ name: 'Project' }"> Document Control</router-link>
+    </div>
   </nav>
 </template>
 
@@ -25,21 +29,30 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .sec-nav-bar {
-  background: #cacaca;
-  height: 2rem;
-  top: 50px;
-  margin: 0px 0 0 0;
+  font-weight: bold;
+  background: var(--dark);
+  height: 2.5rem;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  display: flex;
+  align-items: center;
 }
 
 .sec-nav-bar a {
-  display: inline-block;
   text-decoration: none;
+  text-transform: uppercase;
+  color: white;
   margin: 0px 10px;
   padding: 5px;
-  border: 1px solid black;
-  border-radius: 5px;
-  text-align: center;
+}
+.sec-nav-bar a:visited,
+a:active {
+  color: white;
+  text-decoration: none;
+}
+.sec-nav-bar a:hover {
+  color: var(--very-dark);
 }
 </style>

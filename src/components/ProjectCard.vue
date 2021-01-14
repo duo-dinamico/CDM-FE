@@ -16,8 +16,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 h1 {
+  background-color: var(--medium);
+  border-radius: 10px 10px 0px 0px;
   padding: 10px 5px 5px 10px;
   margin: 0px 0px 0px 0px;
   cursor: pointer;

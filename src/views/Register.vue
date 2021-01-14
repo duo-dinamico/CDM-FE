@@ -128,9 +128,6 @@ export default {
 .register {
   background: #a6a7a6;
 }
-.register_table {
-  /* border-collapse: collapse; */
-}
 .register_table th {
   background-color: #a6a7a6;
   color: black;

@@ -32,21 +32,21 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .home {
   display: flex;
   margin: 0 0 0 0;
   flex-wrap: wrap;
 }
 .project-card {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background: white;
-  border: 1px solid black;
   border-radius: 10px;
   margin: 10px 10px 10px 10px;
   min-width: 250px;
   cursor: pointer;
 }
 .project-card:hover {
-  background: gray;
+  background: var(--very-light);
 }
 </style>
