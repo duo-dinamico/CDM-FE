@@ -1,32 +1,20 @@
 <template>
-  <h1>{{ risk.description }}</h1>
+  <div>
+    <SingleRegisterDetail :isAdd="false" />
+  </div>
 </template>
 
 <script>
-import Registers from "@/composables/Registers";
+import SingleRegisterDetail from "@/components/SingleRegisterDetail";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
 
 export default {
+  components: { SingleRegisterDetail },
   setup() {
-    // route variable for route related actions
+    // route variable for route related    actions
     const route = useRoute();
 
-    const { registers, risk, loadRegisters, loadSingleRisk } = Registers();
-
-    const lookupRisk = async () => {
-      const register_id = ref(0);
-      await loadRegisters(route.params.project_number);
-      for (let register of registers.value) {
-        if (register.risk_number === route.params.risk_number) {
-          register_id.value = register.register_id;
-        }
-      }
-      await loadSingleRisk(route.params.project_number, register_id.value);
-    };
-    lookupRisk();
-
-    return { loadSingleRisk, risk };
+    return { route };
   },
 };
 </script>
