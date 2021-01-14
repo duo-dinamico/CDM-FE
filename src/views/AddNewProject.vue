@@ -1,7 +1,7 @@
 <template>
   <Spinner v-if="isLoading" />
   <form @submit.prevent="handleSubmitProject" v-else class="add-project">
-    <h2>Please input information related to the new project</h2>
+    <h2>new project</h2>
     <label for="project_number">Project Number:</label>
     <input
       type="text"
@@ -118,7 +118,7 @@ h2 {
   border-radius: 10px 10px 0px 0px;
   padding: 10px 5px 5px 10px;
   margin: 0px 0px 0px 0px;
-  cursor: pointer;
+  text-transform: uppercase;
 }
 .add-project {
   display: block;
