@@ -61,14 +61,18 @@ export default {
 
 <style>
 :root {
-  --very-dark: #dfdede8c;
+  --very-dark: #292f36;
+  --dark: #8e9aaf;
+  --medium: #feedae;
+  --light: #efd3d7;
+  --very-light: #fdf4ec;
 }
 
 #app {
   display: inline-flexbox;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Lucida Console", sans-serif;
   margin: 0 0 0 0;
-  background: var(--very-dark);
+  /* background: var(--light); */
   width: 100vw;
   height: 100vh;
 }

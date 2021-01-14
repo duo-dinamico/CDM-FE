@@ -339,7 +339,6 @@ export default {
         name: "Risk",
         params: {
           risk_number: props.register.risk_number,
-          register_id: props.register.register_id,
         },
       });
     };

@@ -123,6 +123,7 @@ const Registers = () => {
     delRegister,
     patchRegister,
     loadSingleRisk,
+    risk,
   };
 };
 
