@@ -10,8 +10,8 @@
         route.name === 'Risk'
       "
     >
-      <router-link :to="{ name: 'Register' }"> Master Register</router-link>
       <router-link :to="{ name: 'Project' }"> Document Control</router-link>
+      <router-link :to="{ name: 'Register' }"> Master Register</router-link>
     </div>
   </nav>
 </template>
@@ -30,6 +30,10 @@ export default {
 </script>
 
 <style scoped>
+.router-link-active {
+  cursor: not-allowed;
+  color: var(--very-dark);
+}
 .sec-nav-bar {
   font-weight: bold;
   background: var(--dark);
@@ -43,12 +47,10 @@ export default {
 .sec-nav-bar a {
   text-decoration: none;
   text-transform: uppercase;
-  color: white;
   margin: 0px 10px;
   padding: 5px;
 }
-.sec-nav-bar a:visited,
-a:active {
+:not(.router-link-active) {
   color: white;
   text-decoration: none;
 }

@@ -64,7 +64,6 @@ export default {
   --very-dark: #292f36;
   --dark: #8e9aaf;
   --medium: #feedae;
-  --light: #efd3d7;
   --very-light: #fdf4ec;
 }
 
@@ -75,6 +74,11 @@ export default {
   /* background: var(--light); */
   width: 100vw;
   height: 100vh;
+}
+input,
+select {
+  font-family: "Lucida Console", sans-serif;
+  font-size: 16px;
 }
 body {
   margin: 0 0 0 0;

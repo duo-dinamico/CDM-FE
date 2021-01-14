@@ -1,34 +1,37 @@
 <template>
   <Spinner v-if="isLoading" />
-  <table v-else>
-    <tr>
-      <th>Records of Issue</th>
-      <th>Version Number</th>
-      <th>Stage Issued</th>
-      <th>Purpose</th>
-      <th>Date</th>
-      <th>Prepared</th>
-      <th>Checked</th>
-      <th>Approved</th>
-      <th>Remarks</th>
-    </tr>
-    <SingleProjectRecord
-      class="record-row"
-      v-for="projectRecord in projectRecords"
-      :key="projectRecord.record_id"
-      :projectRecord="projectRecord"
-      :purposelist="purposeList"
-      @reload-records="loadProjectRecords"
-      @toggle-loading="toggleLoading"
-    />
-    <AddProjectRecord
-      @reload-records="loadProjectRecords"
-      @toggle-loading="toggleLoading"
-      :stage="stage"
-      :versionlist="versionNumberList"
-      :purposelist="purposeList"
-    />
-  </table>
+  <div class="record-issues" v-else>
+    <h2>record of issues</h2>
+    <table>
+      <tr>
+        <th class="edit-column"></th>
+        <th class="version-number">Version Number</th>
+        <th class="stage-issued">Stage Issued</th>
+        <th>Purpose</th>
+        <th>Date</th>
+        <th>Prepared</th>
+        <th>Checked</th>
+        <th>Approved</th>
+        <th>Remarks</th>
+      </tr>
+      <SingleProjectRecord
+        class="record-row"
+        v-for="projectRecord in projectRecords"
+        :key="projectRecord.record_id"
+        :projectRecord="projectRecord"
+        :purposelist="purposeList"
+        @reload-records="loadProjectRecords"
+        @toggle-loading="toggleLoading"
+      />
+      <AddProjectRecord
+        @reload-records="loadProjectRecords"
+        @toggle-loading="toggleLoading"
+        :stage="stage"
+        :versionlist="versionNumberList"
+        :purposelist="purposeList"
+      />
+    </table>
+  </div>
 </template>
 
 <script>
@@ -86,24 +89,45 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h2 {
+  background-color: var(--medium);
+  border-radius: 10px 10px 0px 0px;
+  padding: 10px 5px 5px 10px;
+  margin: 0px 0px 0px 0px;
+  text-transform: uppercase;
+}
+.record-issues {
+  display: block;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  margin: 10px 10px 10px 10px;
+  min-width: 250px;
+}
+.edit-column {
+  width: 3%;
+}
+.version-number {
+  width: 5%;
+}
+.stage-issued {
+  width: 21%;
+}
 table {
+  display: table;
+  empty-cells: hide;
   border: 0px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  width: 100%;
+  table-layout: fixed;
 }
-.record-row {
-  background: white;
+th {
+  border: 1px solid black;
 }
-.record-row:hover {
-  background: #dfdede8c;
+tr {
+  vertical-align: middle;
 }
-input:disabled:hover {
-  background: #dfdede8c;
-}
-input:disabled {
-  background: white;
-  border: 0px solid white;
-  color: black;
-  font-size: 16px;
+tr:hover :not(th) {
+  background-color: var(--medium);
 }
 </style>
