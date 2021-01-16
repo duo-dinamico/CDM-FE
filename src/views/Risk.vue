@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SingleRegisterDetail :isAdd="false" />
+    <SingleRegisterDetail :isAdd="isAdd" />
   </div>
 </template>
 
@@ -14,7 +14,13 @@ export default {
     // route variable for route related    actions
     const route = useRoute();
 
-    return { route };
+    let isAdd = false;
+
+    if (route.params.risk_number === "Add") {
+      isAdd = true;
+    }
+
+    return { isAdd };
   },
 };
 </script>

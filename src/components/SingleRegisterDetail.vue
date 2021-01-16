@@ -2,14 +2,16 @@
   <div>
     <Spinner v-if="isRiskLoading" />
     <div v-else>
-      <form @submit.prevent="handleClickAdd" id="new_risk"></form>
+      <h3 v-if="isAdd">Add a new risk:</h3>
+      <h3 v-if="!isAdd">Risk: {{ route.params.risk_number }}</h3>
+      <form @submit.prevent="" id="new_risk"></form>
 
       <br />
       <label for="input_desc">Description:</label>
       <input
         type="text"
         form="new_risk"
-        v-model="newRisk.description"
+        v-model="cachedRisk.description"
         id="input_desc"
         :disabled="!isRiskEditing"
       />
@@ -18,7 +20,7 @@
       <select
         id="input_risk_status"
         form="new_risk"
-        v-model="newRisk.risk_status"
+        v-model="cachedRisk.risk_status"
         required
         :disabled="!isRiskEditing"
       >
@@ -31,7 +33,7 @@
       <select
         id="input_risk_status"
         form="new_risk"
-        v-model="newRisk.discipline"
+        v-model="cachedRisk.discipline"
         required
         :disabled="!isRiskEditing"
       >
@@ -47,7 +49,7 @@
       <input
         type="text"
         form="new_risk"
-        v-model="newRisk.revision"
+        v-model="cachedRisk.revision"
         id="input_risk_revision"
         required
         :disabled="!isRiskEditing"
@@ -57,7 +59,7 @@
       <select
         id="input_risk_lf_stage"
         form="new_risk"
-        v-model="newRisk.project_lifecycle_stage"
+        v-model="cachedRisk.project_lifecycle_stage"
         required
         :disabled="!isRiskEditing"
       >
@@ -71,7 +73,7 @@
       <select
         id="input_risk_hs_risk"
         form="new_risk"
-        v-model="newRisk.hs_risk"
+        v-model="cachedRisk.hs_risk"
         required
         :disabled="!isRiskEditing"
       >
@@ -83,7 +85,7 @@
       <select
         id="input_risk_env_risk"
         form="new_risk"
-        v-model="newRisk.environmental_risk"
+        v-model="cachedRisk.environmental_risk"
         required
         :disabled="!isRiskEditing"
       >
@@ -95,7 +97,7 @@
       <select
         id="input_risk_prog_risk"
         form="new_risk"
-        v-model="newRisk.programme_risk"
+        v-model="cachedRisk.programme_risk"
         required
         :disabled="!isRiskEditing"
       >
@@ -107,7 +109,7 @@
       <select
         id="input_risk_other_risk"
         form="new_risk"
-        v-model="newRisk.other_risk"
+        v-model="cachedRisk.other_risk"
         required
         :disabled="!isRiskEditing"
       >
@@ -119,7 +121,7 @@
       <select
         id="input_risk_likelihood"
         form="new_risk"
-        v-model="newRisk.likelihood"
+        v-model="cachedRisk.likelihood"
         required
         :disabled="!isRiskEditing"
       >
@@ -132,7 +134,7 @@
       <select
         id="input_risk_severity"
         form="new_risk"
-        v-model="newRisk.severity"
+        v-model="cachedRisk.severity"
         required
         :disabled="!isRiskEditing"
       >
@@ -154,7 +156,7 @@
         id="input_risk_doc"
         type="text"
         form="new_risk"
-        v-model="newRisk.relevant_documentation"
+        v-model="cachedRisk.relevant_documentation"
         :disabled="!isRiskEditing"
       />
       <br />
@@ -163,7 +165,7 @@
         id="input_risk_owner"
         type="text"
         form="new_risk"
-        v-model="newRisk.owner_of_risk"
+        v-model="cachedRisk.owner_of_risk"
         required
         :disabled="!isRiskEditing"
       />
@@ -173,7 +175,7 @@
         id="input_risk_mit_action"
         type="text"
         form="new_risk"
-        v-model="newRisk.mitigation_action"
+        v-model="cachedRisk.mitigation_action"
         required
         :disabled="!isRiskEditing"
       />
@@ -182,7 +184,7 @@
       <select
         id="input_risk_lh_mitigated"
         form="new_risk"
-        v-model="newRisk.likelihood_mitigated"
+        v-model="cachedRisk.likelihood_mitigated"
         required
         :disabled="!isRiskEditing"
       >
@@ -195,7 +197,7 @@
       <select
         id="input_risk_sev_mitigation"
         form="new_risk"
-        v-model="newRisk.severity_mitigation"
+        v-model="cachedRisk.severity_mitigation"
         required
         :disabled="!isRiskEditing"
       >
@@ -216,7 +218,7 @@
       <select
         id="input_risk_further_action"
         form="new_risk"
-        v-model="newRisk.further_action_required"
+        v-model="cachedRisk.further_action_required"
         required
         :disabled="!isRiskEditing"
       >
@@ -237,20 +239,20 @@
         id="input_risk_ident"
         type="text"
         form="new_risk"
-        v-model="newRisk.identified_by"
+        v-model="cachedRisk.identified_by"
         required
         :disabled="!isRiskEditing"
       />
       <br />
       <label for="input_risk_date">Date:</label>
       <input
+        v-if="isRiskEditing"
         type="date"
         form="new_risk"
-        v-model="newRisk.date"
+        v-model="cachedRisk.date"
         id="input_risk_date"
-        required
-        :disabled="!isRiskEditing"
       />
+      <span v-else>{{ cachedRisk.date.substring(0, 10) }}</span>
 
       <div v-if="isAdd">
         <label for="add_button">Add new risk:</label>
@@ -262,11 +264,6 @@
         <label for="edit_button">Edit risk:</label>
         <button form="new_risk" id="edit_button" @click="handleClickEdit">
           📝
-        </button>
-        <br />
-        <label for="delete_button">Delete risk:</label>
-        <button form="new_risk" id="delete_button" @click="handleClickDelete">
-          ❌
         </button>
       </div>
       <div v-else>
@@ -293,12 +290,11 @@ import Spinner from "@/components/Spinner";
 export default {
   components: { Spinner },
   props: ["isAdd"],
-  emits: ["reloadregisters"],
-  setup(props, { emit }) {
+  setup(props) {
     const isRiskLoading = ref(false);
     const isRiskEditing = ref(false);
 
-    const newRisk = ref({
+    const cachedRisk = ref({
       description: "",
       risk_status: "",
       discipline: "",
@@ -351,12 +347,15 @@ export default {
       loadSingleRisk,
       loadRegisters,
       registers,
+      patchRegister,
     } = Registers();
 
     const route = useRoute();
 
     const lookupRisk = async () => {
+      // Start spinner
       isRiskLoading.value = true;
+
       // Check if is Add, and copy data to new  register
       if (!props.isAdd) {
         const register_id = ref(0);
@@ -368,29 +367,51 @@ export default {
         }
         await loadSingleRisk(route.params.project_number, register_id.value);
 
-        for (let key in newRisk.value) {
-          newRisk.value[key] = risk.value[key];
+        // Copy each key value pair from risk to cachedRisk
+        for (let key in cachedRisk.value) {
+          cachedRisk.value[key] = risk.value[key];
         }
       } else {
+        isRiskEditing.value = true;
         console.log("else isAdd: ", props.isAdd);
       }
+
+      // Stop spinner
       isRiskLoading.value = false;
     };
 
     const handleClickAdd = async () => {
+      console.log("handleClickAdd");
+      // Start spinner
       isRiskLoading.value = true;
 
       // Add new register to the database
-      await addRegister(newRisk, route.params.project_number);
+      await addRegister(cachedRisk, route.params.project_number);
 
       // Send an emit to the parent, for reload
-      await emit("reloadregisters");
+      // await emit("reloadregisters");
 
-      // Clear the data of newRisk
-      for (let key in newRisk.value) {
-        newRisk.value[key] = "";
+      // Clear the data of cachedRisk
+      for (let key in cachedRisk.value) {
+        cachedRisk.value[key] = "";
       }
+
+      // Stop spinner
       isRiskLoading.value = false;
+    };
+
+    const handleSaveEdit = async () => {
+      await patchRegister(
+        route.params.project_number,
+        risk.value.register_id,
+        cachedRisk.value
+      );
+
+      // After save, must reload risk
+      lookupRisk();
+
+      // Cancel edit mode
+      isRiskEditing.value = false;
     };
 
     const handleClickEdit = () => {
@@ -399,10 +420,13 @@ export default {
 
     const handleCancelEdit = () => {
       isRiskEditing.value = false;
+
+      // Need to reload risk, because could be changed
+      lookupRisk();
     };
 
     const riskProduct = computed(() => {
-      let product = newRisk.value.likelihood * newRisk.value.severity;
+      let product = cachedRisk.value.likelihood * cachedRisk.value.severity;
       if (product < 4) {
         return "L";
       } else if (product < 10) {
@@ -413,15 +437,16 @@ export default {
     });
 
     const contRiskRef = computed(() => {
-      return !newRisk.value.description
+      return !cachedRisk.value.description
         ? ""
-        : newRisk.value.further_action_required === "true"
+        : cachedRisk.value.further_action_required === "true"
         ? "TBC"
         : "";
     });
     const riskProductMitigated = computed(() => {
       let product =
-        newRisk.value.likelihood_mitigated * newRisk.value.severity_mitigation;
+        cachedRisk.value.likelihood_mitigated *
+        cachedRisk.value.severity_mitigation;
       if (product < 4) {
         return "L";
       } else if (product < 10) {
@@ -431,10 +456,11 @@ export default {
       }
     });
 
+    // load risk at startup
     lookupRisk();
 
     return {
-      newRisk,
+      cachedRisk,
       handleClickAdd,
       riskProduct,
       riskProductMitigated,
@@ -445,6 +471,8 @@ export default {
       contRiskRef,
       handleCancelEdit,
       isRiskLoading,
+      handleSaveEdit,
+      route,
     };
   },
 };
