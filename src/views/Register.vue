@@ -117,10 +117,10 @@ export default {
     };
 
     const handleClickAdd = async () => {
-      console.log("handleClickAdd in register vue");
       router.push({
         name: "Risk",
         params: {
+          // to be diferent from a real risk number
           risk_number: "Add",
         },
       });

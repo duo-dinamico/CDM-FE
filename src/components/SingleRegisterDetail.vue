@@ -4,7 +4,7 @@
     <div v-else>
       <h3 v-if="isAdd">Add a new risk:</h3>
       <h3 v-if="!isAdd">Risk: {{ route.params.risk_number }}</h3>
-      <form @submit.prevent="" id="new_risk"></form>
+      <form @submit.prevent="handleSaveEdit" id="new_risk"></form>
 
       <br />
       <label for="input_desc">Description:</label>
@@ -44,6 +44,16 @@
           >{{ discipline }}</option
         >
       </select>
+      <br />
+      <label for="input_risk_number">Risk Number:</label>
+      <input
+        type="text"
+        form="new_risk"
+        v-model="risk_number"
+        id="input_risk_number"
+        :disabled="true"
+      />
+
       <br />
       <label for="input_risk_revision">Revision:</label>
       <input
@@ -145,7 +155,9 @@
       <br />
       <label for="input_risk_product">Risk Product:</label>
       <input
+        id="input_risk_product"
         type="text"
+        form="new_risk"
         :class="'risk-product-' + riskProduct"
         v-model="riskProduct"
         :disabled="true"
@@ -208,7 +220,9 @@
       <br />
       <label for="input_risk_prod_mit">Product Mitigated:</label>
       <input
+        id="input_risk_prod_mit"
         type="text"
+        form="new_risk"
         :class="'risk-product-' + riskProductMitigated"
         v-model="riskProductMitigated"
         :disabled="true"
@@ -228,8 +242,9 @@
       <br />
       <label for="input_risk_cont_ref">Continuation Risk Reference:</label>
       <input
-        type="text"
         id="input_risk_cont_ref"
+        type="text"
+        form="new_risk"
         v-model="contRiskRef"
         :disabled="true"
       />
@@ -255,8 +270,8 @@
       <span v-else>{{ cachedRisk.date.substring(0, 10) }}</span>
 
       <div v-if="isAdd">
-        <label for="add_button">Add new risk:</label>
-        <button form="new_risk" id="add_button" @click="handleClickAdd">
+        <label for="add_button">Save new risk:</label>
+        <button form="new_risk" id="add_button" type="submit" value="Submit">
           ➕
         </button>
       </div>
@@ -268,7 +283,7 @@
       </div>
       <div v-else>
         <label for="save_button">Save risk:</label>
-        <button form="new_risk" id="save_button" @click="handleSaveEdit">
+        <button form="new_risk" id="save_button" type="submit" value="Submit">
           ✅
         </button>
         <br />
@@ -286,6 +301,7 @@ import { computed, ref } from "vue";
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
 import Spinner from "@/components/Spinner";
+import router from "../router";
 
 export default {
   components: { Spinner },
@@ -293,6 +309,7 @@ export default {
   setup(props) {
     const isRiskLoading = ref(false);
     const isRiskEditing = ref(false);
+    const risk_number = ref("");
 
     const cachedRisk = ref({
       description: "",
@@ -356,24 +373,19 @@ export default {
       // Start spinner
       isRiskLoading.value = true;
 
-      // Check if is Add, and copy data to new  register
-      if (!props.isAdd) {
-        const register_id = ref(0);
-        await loadRegisters(route.params.project_number);
-        for (let register of registers.value) {
-          if (register.risk_number === route.params.risk_number) {
-            register_id.value = register.register_id;
-          }
+      const register_id = ref(0);
+      await loadRegisters(route.params.project_number);
+      for (let register of registers.value) {
+        if (register.risk_number === route.params.risk_number) {
+          register_id.value = register.register_id;
+          risk_number.value = register.risk_number;
         }
-        await loadSingleRisk(route.params.project_number, register_id.value);
+      }
+      await loadSingleRisk(route.params.project_number, register_id.value);
 
-        // Copy each key value pair from risk to cachedRisk
-        for (let key in cachedRisk.value) {
-          cachedRisk.value[key] = risk.value[key];
-        }
-      } else {
-        isRiskEditing.value = true;
-        console.log("else isAdd: ", props.isAdd);
+      // Copy each key value pair from risk to cachedRisk
+      for (let key in cachedRisk.value) {
+        cachedRisk.value[key] = risk.value[key];
       }
 
       // Stop spinner
@@ -381,15 +393,11 @@ export default {
     };
 
     const handleClickAdd = async () => {
-      console.log("handleClickAdd");
       // Start spinner
       isRiskLoading.value = true;
 
       // Add new register to the database
       await addRegister(cachedRisk, route.params.project_number);
-
-      // Send an emit to the parent, for reload
-      // await emit("reloadregisters");
 
       // Clear the data of cachedRisk
       for (let key in cachedRisk.value) {
@@ -401,11 +409,25 @@ export default {
     };
 
     const handleSaveEdit = async () => {
-      await patchRegister(
-        route.params.project_number,
-        risk.value.register_id,
-        cachedRisk.value
-      );
+      if (!props.isAdd) {
+        // This is a patch
+        await patchRegister(
+          route.params.project_number,
+          risk.value.register_id,
+          cachedRisk.value
+        );
+      } else {
+        // This is an add, Add new register to the database
+        await addRegister(cachedRisk, route.params.project_number);
+
+        // Return to the register page
+        router.push({
+          name: "Register",
+          params: {
+            project_number: route.params.project_number,
+          },
+        });
+      }
 
       // After save, must reload risk
       lookupRisk();
@@ -456,8 +478,12 @@ export default {
       }
     });
 
-    // load risk at startup
-    lookupRisk();
+    // load risk at startup, if it's not Add
+    if (!props.isAdd) {
+      lookupRisk();
+    } else {
+      isRiskEditing.value = true;
+    }
 
     return {
       cachedRisk,
@@ -473,6 +499,7 @@ export default {
       isRiskLoading,
       handleSaveEdit,
       route,
+      risk_number,
     };
   },
 };
