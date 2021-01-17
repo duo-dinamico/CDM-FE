@@ -42,6 +42,10 @@
           :disciplineList="disciplineList"
           :One2FiveList="One2FiveList"
         />
+        <label for="add_button">Add new risk:</label>
+        <button form="new_risk" id="add_button" @click="handleClickAdd">
+          ➕
+        </button>
 
         <!-- Add new line -->
         <!-- <SingleRegisterAdd
@@ -60,6 +64,7 @@ import SingleRegister from "@/components/SingleRegister";
 import Spinner from "@/components/Spinner";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
+import router from "../router";
 
 export default {
   components: { SingleRegister, Spinner },
@@ -111,6 +116,16 @@ export default {
       isLoading.value = false;
     };
 
+    const handleClickAdd = async () => {
+      router.push({
+        name: "Risk",
+        params: {
+          // to be diferent from a real risk number
+          risk_number: "Add",
+        },
+      });
+    };
+
     return {
       registers,
       route,
@@ -119,6 +134,7 @@ export default {
       disciplineList,
       One2FiveList,
       headers,
+      handleClickAdd,
     };
   },
 };

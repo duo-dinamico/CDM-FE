@@ -1,252 +1,317 @@
 <template>
-  <form @submit.prevent="handleClickAdd" id="new_risk"></form>
+  <div>
+    <Spinner v-if="isRiskLoading" />
+    <div v-else>
+      <h3 v-if="isAdd">Add a new risk:</h3>
+      <h3 v-if="!isAdd">Risk: {{ route.params.risk_number }}</h3>
+      <form @submit.prevent="handleSaveEdit" id="new_risk"></form>
 
-  <label for="add_button">Add new register:</label>
-  <button form="new_risk" id="add_button">➕</button>
-  <br />
-  <label for="input_desc">Description:</label>
-  <input
-    type="text"
-    form="new_risk"
-    v-model="newRegister.description"
-    id="input_desc"
-  />
-  <br />
-  <label for="input_risk_status">Risk Status:</label>
-  <select
-    id="input_risk_status"
-    form="new_risk"
-    v-model="newRegister.risk_status"
-    required
-  >
-    <option value="ACTIVE">ACTIVE</option>
-    <option value="RESOLVED">RESOLVED</option>
-    <option value="CONTINUED">CONTINUED</option>
-  </select>
-  <br />
-  <label for="input_risk_status">Discipline:</label>
-  <select
-    id="input_risk_status"
-    form="new_risk"
-    v-model="newRegister.discipline"
-    required
-  >
-    <option
-      v-for="discipline in disciplineList"
-      :key="discipline"
-      :value="discipline"
-      >{{ discipline }}</option
-    >
-  </select>
-  <br />
-  <label for="input_risk_revision">Revision:</label>
-  <input
-    type="text"
-    form="new_risk"
-    v-model="newRegister.revision"
-    id="input_risk_revision"
-    required
-  />
-  <br />
-  <label for="input_risk_lf_stage">Lifecycle Stage:</label>
-  <select
-    id="input_risk_lf_stage"
-    form="new_risk"
-    v-model="newRegister.project_lifecycle_stage"
-    required
-  >
-    <option value="C">C</option>
-    <option value="O">O</option>
-    <option value="M">M</option>
-    <option value="D">D</option>
-  </select>
-  <br />
-  <label for="input_risk_hs_risk">HS Risk:</label>
-  <select
-    id="input_risk_hs_risk"
-    form="new_risk"
-    v-model="newRegister.hs_risk"
-    required
-  >
-    <option value="true">True</option>
-    <option value="false">False</option>
-  </select>
-  <br />
-  <label for="input_risk_env_risk">Environmental Risk:</label>
-  <select
-    id="input_risk_env_risk"
-    form="new_risk"
-    v-model="newRegister.environmental_risk"
-    required
-  >
-    <option value="true">True</option>
-    <option value="false">False</option>
-  </select>
-  <br />
-  <label for="input_risk_prog_risk">Programme Risk:</label>
-  <select
-    id="input_risk_prog_risk"
-    form="new_risk"
-    v-model="newRegister.programme_risk"
-    required
-  >
-    <option value="true">True</option>
-    <option value="false">False</option>
-  </select>
-  <br />
-  <label for="input_risk_other_risk">Other Risk:</label>
-  <select
-    id="input_risk_other_risk"
-    form="new_risk"
-    v-model="newRegister.other_risk"
-    required
-  >
-    <option value="true">True</option>
-    <option value="false">False</option>
-  </select>
-  <br />
-  <label for="input_risk_likelihood">Likelihood:</label>
-  <select
-    id="input_risk_likelihood"
-    form="new_risk"
-    v-model="newRegister.likelihood"
-    required
-  >
-    <option v-for="num in One2FiveList" :key="num" :value="num">
-      {{ num }}
-    </option>
-  </select>
-  <br />
-  <label for="input_risk_severity">Severity:</label>
-  <select
-    id="input_risk_severity"
-    form="new_risk"
-    v-model="newRegister.severity"
-    required
-  >
-    <option v-for="num in One2FiveList" :key="num" :value="num">
-      {{ num }}
-    </option>
-  </select>
-  <br />
-  <label for="input_risk_product">Risk Product:</label>
-  <input
-    type="text"
-    :class="'risk-product-' + riskProduct"
-    v-model="newRegister.riskProduct"
-  />
-  <br />
-  <label for="input_risk_doc">Relevant Documentation:</label>
-  <input
-    id="input_risk_doc"
-    type="text"
-    form="new_risk"
-    v-model="newRegister.relevant_documentation"
-  />
-  <br />
-  <label for="input_risk_owner">Owner of Risk:</label>
-  <input
-    id="input_risk_owner"
-    type="text"
-    form="new_risk"
-    v-model="newRegister.owner_of_risk"
-    required
-  />
-  <br />
-  <label for="input_risk_mit_action">Mitigation Action:</label>
-  <input
-    id="input_risk_mit_action"
-    type="text"
-    form="new_risk"
-    v-model="newRegister.mitigation_action"
-    required
-  />
-  <br />
-  <label for="input_risk_lh_mitigated">Likelihood Mitigated:</label>
-  <select
-    id="input_risk_lh_mitigated"
-    form="new_risk"
-    v-model="newRegister.likelihood_mitigated"
-    required
-  >
-    <option v-for="num in One2FiveList" :key="num" :value="num">
-      {{ num }}
-    </option>
-  </select>
-  <br />
-  <label for="input_risk_sev_mitigation">Severity Mitigation:</label>
-  <select
-    id="input_risk_sev_mitigation"
-    form="new_risk"
-    v-model="newRegister.severity_mitigation"
-    required
-  >
-    <option v-for="num in One2FiveList" :key="num" :value="num">
-      {{ num }}
-    </option>
-  </select>
-  <br />
-  <label for="input_risk_prod_mit">Product Mitigated:</label>
-  <input
-    type="text"
-    :class="'risk-product-' + riskProductMitigated"
-    v-model="riskProductMitigated"
-  />
-  <br />
-  <label for="input_risk_further_action">Further action required:</label>
-  <select
-    id="input_risk_further_action"
-    form="new_risk"
-    v-model="newRegister.further_action_required"
-    required
-  >
-    <option value="true">Y</option>
-    <option value="false">N</option>
-  </select>
-  <br />
-  <label for="input_risk_cont_ref">Continuation Risk Reference:</label>
-  <input
-    type="text"
-    id="input_risk_cont_ref"
-    value="{{
-    !newRegister.description
-      ? ''
-      : newRegister.further_action_required === 'true'
-      ? 'TBC'
-      : ''
-  }}"
-  />
-  <br />
-  <label for="input_risk_ident">Identified by:</label>
-  <input
-    id="input_risk_ident"
-    type="text"
-    form="new_risk"
-    v-model="newRegister.identified_by"
-    required
-  />
-  <br />
-  <label for="input_risk_date">Date:</label>
-  <input
-    type="date"
-    form="new_risk"
-    v-model="newRegister.date"
-    id="input_risk_date"
-    required
-  />
+      <br />
+      <label for="input_desc">Description:</label>
+      <input
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.description"
+        id="input_desc"
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_status">Risk Status:</label>
+      <select
+        id="input_risk_status"
+        form="new_risk"
+        v-model="cachedRisk.risk_status"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="RESOLVED">RESOLVED</option>
+        <option value="CONTINUED">CONTINUED</option>
+      </select>
+      <br />
+      <label for="input_risk_status">Discipline:</label>
+      <select
+        id="input_risk_status"
+        form="new_risk"
+        v-model="cachedRisk.discipline"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option
+          v-for="discipline in disciplineList"
+          :key="discipline"
+          :value="discipline"
+          >{{ discipline }}</option
+        >
+      </select>
+      <br />
+      <label for="input_risk_number">Risk Number:</label>
+      <input
+        type="text"
+        form="new_risk"
+        v-model="risk_number"
+        id="input_risk_number"
+        :disabled="true"
+      />
+
+      <br />
+      <label for="input_risk_revision">Revision:</label>
+      <input
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.revision"
+        id="input_risk_revision"
+        required
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_lf_stage">Lifecycle Stage:</label>
+      <select
+        id="input_risk_lf_stage"
+        form="new_risk"
+        v-model="cachedRisk.project_lifecycle_stage"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="C">C</option>
+        <option value="O">O</option>
+        <option value="M">M</option>
+        <option value="D">D</option>
+      </select>
+      <br />
+      <label for="input_risk_hs_risk">HS Risk:</label>
+      <select
+        id="input_risk_hs_risk"
+        form="new_risk"
+        v-model="cachedRisk.hs_risk"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+      <br />
+      <label for="input_risk_env_risk">Environmental Risk:</label>
+      <select
+        id="input_risk_env_risk"
+        form="new_risk"
+        v-model="cachedRisk.environmental_risk"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+      <br />
+      <label for="input_risk_prog_risk">Programme Risk:</label>
+      <select
+        id="input_risk_prog_risk"
+        form="new_risk"
+        v-model="cachedRisk.programme_risk"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+      <br />
+      <label for="input_risk_other_risk">Other Risk:</label>
+      <select
+        id="input_risk_other_risk"
+        form="new_risk"
+        v-model="cachedRisk.other_risk"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+      <br />
+      <label for="input_risk_likelihood">Likelihood:</label>
+      <select
+        id="input_risk_likelihood"
+        form="new_risk"
+        v-model="cachedRisk.likelihood"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
+      </select>
+      <br />
+      <label for="input_risk_severity">Severity:</label>
+      <select
+        id="input_risk_severity"
+        form="new_risk"
+        v-model="cachedRisk.severity"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
+      </select>
+      <br />
+      <label for="input_risk_product">Risk Product:</label>
+      <input
+        id="input_risk_product"
+        type="text"
+        form="new_risk"
+        :class="'risk-product-' + riskProduct"
+        v-model="riskProduct"
+        :disabled="true"
+      />
+      <br />
+      <label for="input_risk_doc">Relevant Documentation:</label>
+      <input
+        id="input_risk_doc"
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.relevant_documentation"
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_owner">Owner of Risk:</label>
+      <input
+        id="input_risk_owner"
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.owner_of_risk"
+        required
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_mit_action">Mitigation Action:</label>
+      <input
+        id="input_risk_mit_action"
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.mitigation_action"
+        required
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_lh_mitigated">Likelihood Mitigated:</label>
+      <select
+        id="input_risk_lh_mitigated"
+        form="new_risk"
+        v-model="cachedRisk.likelihood_mitigated"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
+      </select>
+      <br />
+      <label for="input_risk_sev_mitigation">Severity Mitigation:</label>
+      <select
+        id="input_risk_sev_mitigation"
+        form="new_risk"
+        v-model="cachedRisk.severity_mitigation"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option v-for="num in One2FiveList" :key="num" :value="num">
+          {{ num }}
+        </option>
+      </select>
+      <br />
+      <label for="input_risk_prod_mit">Product Mitigated:</label>
+      <input
+        id="input_risk_prod_mit"
+        type="text"
+        form="new_risk"
+        :class="'risk-product-' + riskProductMitigated"
+        v-model="riskProductMitigated"
+        :disabled="true"
+      />
+      <br />
+      <label for="input_risk_further_action">Further action required:</label>
+      <select
+        id="input_risk_further_action"
+        form="new_risk"
+        v-model="cachedRisk.further_action_required"
+        required
+        :disabled="!isRiskEditing"
+      >
+        <option value="true">Y</option>
+        <option value="false">N</option>
+      </select>
+      <br />
+      <label for="input_risk_cont_ref">Continuation Risk Reference:</label>
+      <input
+        id="input_risk_cont_ref"
+        type="text"
+        form="new_risk"
+        v-model="contRiskRef"
+        :disabled="true"
+      />
+      <br />
+      <label for="input_risk_ident">Identified by:</label>
+      <input
+        id="input_risk_ident"
+        type="text"
+        form="new_risk"
+        v-model="cachedRisk.identified_by"
+        required
+        :disabled="!isRiskEditing"
+      />
+      <br />
+      <label for="input_risk_date">Date:</label>
+      <input
+        v-if="isRiskEditing"
+        type="date"
+        form="new_risk"
+        v-model="cachedRisk.date"
+        id="input_risk_date"
+      />
+      <span v-else>{{ cachedRisk.date.substring(0, 10) }}</span>
+
+      <div v-if="isAdd">
+        <label for="add_button">Save new risk:</label>
+        <button form="new_risk" id="add_button" type="submit" value="Submit">
+          ➕
+        </button>
+      </div>
+      <div v-else-if="!isRiskEditing">
+        <label for="edit_button">Edit risk:</label>
+        <button form="new_risk" id="edit_button" @click="handleClickEdit">
+          📝
+        </button>
+      </div>
+      <div v-else>
+        <label for="save_button">Save risk:</label>
+        <button form="new_risk" id="save_button" type="submit" value="Submit">
+          ✅
+        </button>
+        <br />
+        <label for="cancel_button">Cancel risk edit:</label>
+        <button form="new_risk" id="cancel_button" @click="handleCancelEdit">
+          ↩
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import Registers from "@/composables/Registers";
 import { useRoute } from "vue-router";
+import Spinner from "@/components/Spinner";
+import router from "../router";
+
 export default {
-  props: ["disciplineList", "One2FiveList", "isAdd"],
-  emits: ["reloadregisters"],
-  setup(props, { emit }) {
-    console.log(props.register);
-    const isLoading = ref(false);
-    const newRegister = ref({
+  components: { Spinner },
+  props: ["isAdd"],
+  setup(props) {
+    const isRiskLoading = ref(false);
+    const isRiskEditing = ref(false);
+    const risk_number = ref("");
+
+    const cachedRisk = ref({
       description: "",
       risk_status: "",
       discipline: "",
@@ -268,45 +333,122 @@ export default {
       date: "",
     });
 
-    const copyDataFromRegister = () => {
-      for (let key in newRegister.value) {
-        newRegister.value[key] = props.register[key];
-      }
-    };
+    const disciplineList = [
+      "GEN",
+      "MULTI",
+      "OTHER",
+      "ACOU",
+      "ARCH",
+      "CIV",
+      "ELEC",
+      "FACM",
+      "FCDE",
+      "FIN",
+      "FIRE",
+      "M&E",
+      "MECH",
+      "PM",
+      "R-3R",
+      "R-OLE",
+      "R-PH",
+      "R-PS",
+      "R-PW",
+      "STR",
+    ];
 
-    onMounted(() => {
-      console.log("component is mounted!");
-      if (!props.isAdd) {
-        copyDataFromRegister();
-      } else {
-        console.log("else isAdd: ", props.isAdd);
-      }
-    });
+    const One2FiveList = ["1", "2", "3", "4", "5"];
 
-    // Copy data to new register
-
-    const { addRegister } = Registers();
+    const {
+      addRegister,
+      risk,
+      loadSingleRisk,
+      loadRegisters,
+      registers,
+      patchRegister,
+    } = Registers();
 
     const route = useRoute();
 
+    const lookupRisk = async () => {
+      // Start spinner
+      isRiskLoading.value = true;
+
+      const register_id = ref(0);
+      await loadRegisters(route.params.project_number);
+      for (let register of registers.value) {
+        if (register.risk_number === route.params.risk_number) {
+          register_id.value = register.register_id;
+          risk_number.value = register.risk_number;
+        }
+      }
+      await loadSingleRisk(route.params.project_number, register_id.value);
+
+      // Copy each key value pair from risk to cachedRisk
+      for (let key in cachedRisk.value) {
+        cachedRisk.value[key] = risk.value[key];
+      }
+
+      // Stop spinner
+      isRiskLoading.value = false;
+    };
+
     const handleClickAdd = async () => {
-      isLoading.value = true;
+      // Start spinner
+      isRiskLoading.value = true;
 
       // Add new register to the database
-      await addRegister(newRegister, route.params.project_number);
+      await addRegister(cachedRisk, route.params.project_number);
 
-      // Send an emit to the parent, for reload
-      await emit("reloadregisters");
-
-      // Clear the data of newRegister
-      for (let key in newRegister.value) {
-        newRegister.value[key] = "";
+      // Clear the data of cachedRisk
+      for (let key in cachedRisk.value) {
+        cachedRisk.value[key] = "";
       }
-      isLoading.value = false;
+
+      // Stop spinner
+      isRiskLoading.value = false;
+    };
+
+    const handleSaveEdit = async () => {
+      if (!props.isAdd) {
+        // This is a patch
+        await patchRegister(
+          route.params.project_number,
+          risk.value.register_id,
+          cachedRisk.value
+        );
+      } else {
+        // This is an add, Add new register to the database
+        await addRegister(cachedRisk, route.params.project_number);
+
+        // Return to the register page
+        router.push({
+          name: "Register",
+          params: {
+            project_number: route.params.project_number,
+          },
+        });
+      }
+
+      // After save, must reload risk
+      lookupRisk();
+
+      // Cancel edit mode
+      isRiskEditing.value = false;
+    };
+
+    const handleClickEdit = () => {
+      isRiskEditing.value = true;
+    };
+
+    const handleCancelEdit = () => {
+      isRiskEditing.value = false;
+
+      // Need to reload risk, because could be changed
+      lookupRisk();
     };
 
     const riskProduct = computed(() => {
-      let product = newRegister.value.likelihood * newRegister.value.severity;
+      let product = cachedRisk.value.likelihood * cachedRisk.value.severity;
       if (product < 4) {
         return "L";
       } else if (product < 10) {
@@ -316,10 +458,17 @@ export default {
       }
     });
 
+    const contRiskRef = computed(() => {
+      return !cachedRisk.value.description
+        ? ""
+        : cachedRisk.value.further_action_required === "true"
+        ? "TBC"
+        : "";
+    });
     const riskProductMitigated = computed(() => {
       let product =
-        newRegister.value.likelihood_mitigated *
-        newRegister.value.severity_mitigation;
+        cachedRisk.value.likelihood_mitigated *
+        cachedRisk.value.severity_mitigation;
       if (product < 4) {
         return "L";
       } else if (product < 10) {
@@ -329,144 +478,31 @@ export default {
       }
     });
 
+    // load risk at startup, if it's not Add
+    if (!props.isAdd) {
+      lookupRisk();
+    } else {
+      isRiskEditing.value = true;
+    }
+
     return {
-      newRegister,
+      cachedRisk,
       handleClickAdd,
       riskProduct,
       riskProductMitigated,
+      disciplineList,
+      One2FiveList,
+      isRiskEditing,
+      handleClickEdit,
+      contRiskRef,
+      handleCancelEdit,
+      isRiskLoading,
+      handleSaveEdit,
+      route,
+      risk_number,
     };
   },
 };
 </script>
 
-<style scoped>
-.single_register_table td {
-  background: lightgray;
-  border: 1px solid;
-  text-align: left;
-  vertical-align: middle;
-  padding: 0;
-}
-
-/* risk status styles */
-.single_register_table .ACTIVE {
-  background: red;
-  color: white;
-  font-weight: bold;
-}
-.single_register_table .RESOLVED {
-  background: white;
-  color: green;
-  font-weight: bold;
-}
-.single_register_table .CONTINUED {
-  background: white;
-  color: rgb(78, 4, 100);
-  font-style: italic;
-  font-weight: bold;
-}
-
-/* risk lifecycle-stage styles */
-.single_register_table .stage-C {
-  background: rgb(86, 157, 238);
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-.single_register_table .stage-O {
-  background: rgb(186, 233, 241);
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-.single_register_table .stage-M {
-  background: rgb(186, 233, 241);
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-.single_register_table .stage-D {
-  background: rgb(186, 233, 241);
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk H&S styles */
-.single_register_table .HS-H {
-  /* background: rgb(86, 157, 238); */
-  color: red;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Environment styles */
-.single_register_table .Env-E {
-  /* background: rgb(86, 157, 238); */
-  color: green;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Programme styles */
-.single_register_table .Prog-P {
-  /* background: rgb(86, 157, 238); */
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Other styles */
-.single_register_table .Other-O {
-  /* background: rgb(86, 157, 238); */
-  color: rgb(80, 163, 231);
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Centered Cells styles */
-.single_register_table .center-cell {
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Risk Product styles */
-.single_register_table .risk-product-L {
-  background: white;
-  color: green;
-  text-align: center;
-  font-weight: bold;
-}
-.single_register_table .risk-product-M {
-  background: orange;
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-.single_register_table .risk-product-H {
-  background: red;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* risk Further styles */
-.single_register_table .Further-Y {
-  background: rgb(220, 233, 149);
-  color: black;
-  text-align: center;
-  font-weight: bold;
-}
-
-.single_register_table .cell-input input,
-select {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.single_register_table td:hover {
-  /* background: #f5f5f5; */
-}
-</style>
+<style scoped></style>
