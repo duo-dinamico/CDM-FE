@@ -573,6 +573,10 @@ export default {
   border-radius: 10px;
   margin: 10px 10px 10px 10px;
   min-width: 250px;
+  padding: 0px 50px 0px 0px;
+}
+.risk-detail div {
+  padding: 0px 0px 20px 0px;
 }
 .risk-detail h2 {
   background-color: var(--medium);
@@ -741,6 +745,23 @@ span {
 /* risk Other styles */
 .Other-O {
   color: rgb(80, 163, 231) !important;
+  font-weight: bold;
+}
+
+/* risk Risk Product styles */
+.risk-product-L {
+  background: white !important;
+  color: green !important;
+  font-weight: bold;
+}
+.risk-product-M {
+  background: orange !important;
+  color: black !important;
+  font-weight: bold;
+}
+.risk-product-H {
+  background: red !important;
+  color: white !important;
   font-weight: bold;
 }
 </style>
