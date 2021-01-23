@@ -35,6 +35,7 @@
       />
       <label for="input_risk_status"><h3>Risk Status:</h3></label>
       <select
+        :class="'risk-status-' + cachedRisk.risk_status"
         id="input_risk_status"
         form="new_risk"
         v-model="cachedRisk.risk_status"
@@ -83,6 +84,7 @@
 
       <label for="input_risk_lf_stage"><h3>Lifecycle Stage:</h3></label>
       <select
+        :class="'risk-lifecycle-stage-' + cachedRisk.project_lifecycle_stage"
         id="input_risk_lf_stage"
         form="new_risk"
         v-model="cachedRisk.project_lifecycle_stage"
@@ -96,7 +98,21 @@
       </select>
 
       <label for="input_risk_hs_risk"><h3>HS Risk:</h3></label>
+      <input
+        v-if="!isRiskEditing && cachedRisk.hs_risk"
+        class="HS-H"
+        type="text"
+        value="H"
+        :disabled="true"
+      />
+      <input
+        v-else-if="!isRiskEditing && !cachedRisk.hs_risk"
+        type="text"
+        value=""
+        :disabled="true"
+      />
       <select
+        v-else
         id="input_risk_hs_risk"
         form="new_risk"
         v-model="cachedRisk.hs_risk"
@@ -108,7 +124,21 @@
       </select>
 
       <label for="input_risk_env_risk"><h3>Environmental Risk:</h3></label>
+      <input
+        v-if="!isRiskEditing && cachedRisk.environmental_risk"
+        class="Env-E"
+        type="text"
+        value="E"
+        :disabled="true"
+      />
+      <input
+        v-else-if="!isRiskEditing && !cachedRisk.environmental_risk"
+        type="text"
+        value=""
+        :disabled="true"
+      />
       <select
+        v-else
         id="input_risk_env_risk"
         form="new_risk"
         v-model="cachedRisk.environmental_risk"
@@ -120,7 +150,21 @@
       </select>
 
       <label for="input_risk_prog_risk"><h3>Programme Risk:</h3></label>
+      <input
+        v-if="!isRiskEditing && cachedRisk.programme_risk"
+        class="Prog-P"
+        type="text"
+        value="P"
+        :disabled="true"
+      />
+      <input
+        v-else-if="!isRiskEditing && !cachedRisk.programme_risk"
+        type="text"
+        value=""
+        :disabled="true"
+      />
       <select
+        v-else
         id="input_risk_prog_risk"
         form="new_risk"
         v-model="cachedRisk.programme_risk"
@@ -132,7 +176,21 @@
       </select>
 
       <label for="input_risk_other_risk"><h3>Other Risk:</h3></label>
+      <input
+        v-if="!isRiskEditing && cachedRisk.other_risk"
+        class="Other-O"
+        type="text"
+        value="O"
+        :disabled="true"
+      />
+      <input
+        v-else-if="!isRiskEditing && !cachedRisk.other_risk"
+        type="text"
+        value=""
+        :disabled="true"
+      />
       <select
+        v-else
         id="input_risk_other_risk"
         form="new_risk"
         v-model="cachedRisk.other_risk"
@@ -612,5 +670,77 @@ span {
 }
 .risk-detail select option {
   font-weight: normal;
+}
+
+/* risk status styles */
+.risk-status-ACTIVE {
+  background-image: unset !important;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.risk-status-RESOLVED {
+  background-image: unset !important;
+  background: white;
+  color: green;
+  font-weight: bold;
+}
+.risk-status-CONTINUED {
+  background-image: unset !important;
+  background: white;
+  color: rgb(78, 4, 100);
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* risk lifecycle-stage styles */
+.risk-lifecycle-stage-C {
+  background-image: unset !important;
+  background: rgb(86, 157, 238);
+  color: black;
+  font-weight: bold;
+}
+.risk-lifecycle-stage-O {
+  background-image: unset !important;
+  background: rgb(186, 233, 241);
+  color: black;
+  font-weight: bold;
+}
+.risk-lifecycle-stage-M {
+  background-image: unset !important;
+  background: rgb(186, 233, 241);
+  color: black;
+  font-weight: bold;
+}
+.risk-lifecycle-stage-D {
+  background-image: unset !important;
+  background: rgb(186, 233, 241);
+  color: black;
+  font-weight: bold;
+}
+
+/* risk H&S styles */
+.HS-H {
+  color: red !important;
+  font-weight: bold;
+}
+
+/* risk Environment styles */
+.Env-E {
+  color: green !important;
+  font-weight: bold;
+}
+
+/* risk Programme styles */
+.Prog-P {
+  color: black !important;
+  font-weight: bold;
+}
+
+/* risk Other styles */
+.Other-O {
+  color: rgb(80, 163, 231) !important;
+  font-weight: bold;
 }
 </style>
