@@ -2,7 +2,7 @@
   <div class="register">
     <Spinner v-if="isLoading" />
     <div v-else>
-      <h1>Registers for project {{ route.params.project_number }}</h1>
+      <h2>Registers for project {{ route.params.project_number }}</h2>
       <table class="register_table">
         <tr>
           <!-- 6 colunas -->
@@ -140,9 +140,20 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h2 {
+  background-color: var(--medium);
+  border-radius: 10px 10px 0px 0px;
+  padding: 10px 5px 5px 10px;
+  margin: 0px 0px 0px 0px;
+  text-transform: uppercase;
+}
 .register {
-  background: #a6a7a6;
+  display: block;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  margin: 10px 10px 10px 10px;
+  min-width: 250px;
 }
 .register_table th {
   background-color: #a6a7a6;
