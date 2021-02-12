@@ -1,356 +1,350 @@
 <template>
-  <div class="risk-detail">
-    <Spinner v-if="isRiskLoading" />
-    <div v-else>
-      <h2 v-if="isAdd">Add a new risk:</h2>
-      <h2 v-if="!isAdd">Risk: {{ route.params.risk_number }}</h2>
-      <form @submit.prevent="handleSaveEdit" id="new_risk"></form>
+  <Spinner v-if="isRiskLoading" />
+  <div v-else class="risk-detail">
+    <h2 v-if="isAdd">Add a new risk:</h2>
+    <h2 v-if="!isAdd">Risk: {{ route.params.risk_number }}</h2>
+    <form @submit.prevent="handleSaveEdit" id="new_risk"></form>
 
-      <div v-if="isAdd">
-        <button form="new_risk" id="add_button" type="submit" value="Submit">
-          ➕
-        </button>
-      </div>
-      <div v-else-if="!isRiskEditing">
-        <button form="new_risk" id="edit_button" @click="handleClickEdit">
-          📝
-        </button>
-      </div>
-      <div v-else>
-        <button form="new_risk" id="save_button" type="submit" value="Submit">
-          ✅
-        </button>
-        <button form="new_risk" id="cancel_button" @click="handleCancelEdit">
-          ↩
-        </button>
-      </div>
-
-      <label for="input_desc"> <h3>Description:</h3></label>
-      <input
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.description"
-        id="input_desc"
-        :disabled="!isRiskEditing"
-      />
-      <label for="input_risk_status"><h3>Risk Status:</h3></label>
-      <select
-        :class="'risk-status-' + cachedRisk.risk_status"
-        id="input_risk_status"
-        form="new_risk"
-        v-model="cachedRisk.risk_status"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="ACTIVE">ACTIVE</option>
-        <option value="RESOLVED">RESOLVED</option>
-        <option value="CONTINUED">CONTINUED</option>
-      </select>
-
-      <label for="input_risk_status"><h3>Discipline:</h3></label>
-      <select
-        id="input_risk_status"
-        form="new_risk"
-        v-model="cachedRisk.discipline"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option
-          v-for="discipline in disciplineList"
-          :key="discipline"
-          :value="discipline"
-          >{{ discipline }}</option
-        >
-      </select>
-
-      <label for="input_risk_number"><h3>Risk Number:</h3></label>
-      <input
-        type="text"
-        form="new_risk"
-        v-model="risk_number"
-        id="input_risk_number"
-        :disabled="true"
-      />
-
-      <label for="input_risk_revision"><h3>Revision:</h3></label>
-      <input
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.revision"
-        id="input_risk_revision"
-        required
-        :disabled="!isRiskEditing"
-      />
-
-      <label for="input_risk_lf_stage"><h3>Lifecycle Stage:</h3></label>
-      <select
-        :class="'risk-lifecycle-stage-' + cachedRisk.project_lifecycle_stage"
-        id="input_risk_lf_stage"
-        form="new_risk"
-        v-model="cachedRisk.project_lifecycle_stage"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="C">C</option>
-        <option value="O">O</option>
-        <option value="M">M</option>
-        <option value="D">D</option>
-      </select>
-
-      <label for="input_risk_hs_risk"><h3>HS Risk:</h3></label>
-      <input
-        v-if="!isRiskEditing && cachedRisk.hs_risk"
-        class="HS-H"
-        type="text"
-        value="H"
-        :disabled="true"
-      />
-      <input
-        v-else-if="!isRiskEditing && !cachedRisk.hs_risk"
-        type="text"
-        value=""
-        :disabled="true"
-      />
-      <select
-        v-else
-        id="input_risk_hs_risk"
-        form="new_risk"
-        v-model="cachedRisk.hs_risk"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="true">True</option>
-        <option value="false">False</option>
-      </select>
-
-      <label for="input_risk_env_risk"><h3>Environmental Risk:</h3></label>
-      <input
-        v-if="!isRiskEditing && cachedRisk.environmental_risk"
-        class="Env-E"
-        type="text"
-        value="E"
-        :disabled="true"
-      />
-      <input
-        v-else-if="!isRiskEditing && !cachedRisk.environmental_risk"
-        type="text"
-        value=""
-        :disabled="true"
-      />
-      <select
-        v-else
-        id="input_risk_env_risk"
-        form="new_risk"
-        v-model="cachedRisk.environmental_risk"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="true">True</option>
-        <option value="false">False</option>
-      </select>
-
-      <label for="input_risk_prog_risk"><h3>Programme Risk:</h3></label>
-      <input
-        v-if="!isRiskEditing && cachedRisk.programme_risk"
-        class="Prog-P"
-        type="text"
-        value="P"
-        :disabled="true"
-      />
-      <input
-        v-else-if="!isRiskEditing && !cachedRisk.programme_risk"
-        type="text"
-        value=""
-        :disabled="true"
-      />
-      <select
-        v-else
-        id="input_risk_prog_risk"
-        form="new_risk"
-        v-model="cachedRisk.programme_risk"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="true">True</option>
-        <option value="false">False</option>
-      </select>
-
-      <label for="input_risk_other_risk"><h3>Other Risk:</h3></label>
-      <input
-        v-if="!isRiskEditing && cachedRisk.other_risk"
-        class="Other-O"
-        type="text"
-        value="O"
-        :disabled="true"
-      />
-      <input
-        v-else-if="!isRiskEditing && !cachedRisk.other_risk"
-        type="text"
-        value=""
-        :disabled="true"
-      />
-      <select
-        v-else
-        id="input_risk_other_risk"
-        form="new_risk"
-        v-model="cachedRisk.other_risk"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="true">True</option>
-        <option value="false">False</option>
-      </select>
-
-      <label for="input_risk_likelihood"><h3>Likelihood:</h3></label>
-      <select
-        id="input_risk_likelihood"
-        form="new_risk"
-        v-model="cachedRisk.likelihood"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option v-for="num in One2FiveList" :key="num" :value="num">
-          {{ num }}
-        </option>
-      </select>
-
-      <label for="input_risk_severity"><h3>Severity:</h3></label>
-      <select
-        id="input_risk_severity"
-        form="new_risk"
-        v-model="cachedRisk.severity"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option v-for="num in One2FiveList" :key="num" :value="num">
-          {{ num }}
-        </option>
-      </select>
-
-      <label for="input_risk_product"><h3>Risk Product:</h3></label>
-      <input
-        id="input_risk_product"
-        type="text"
-        form="new_risk"
-        :class="'risk-product-' + riskProduct"
-        v-model="riskProduct"
-        :disabled="true"
-      />
-
-      <label for="input_risk_doc"><h3>Relevant Documentation:</h3></label>
-      <input
-        id="input_risk_doc"
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.relevant_documentation"
-        :disabled="!isRiskEditing"
-      />
-
-      <label for="input_risk_owner"><h3>Owner of Risk:</h3></label>
-      <input
-        id="input_risk_owner"
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.owner_of_risk"
-        required
-        :disabled="!isRiskEditing"
-      />
-
-      <label for="input_risk_mit_action"><h3>Mitigation Action:</h3></label>
-      <input
-        id="input_risk_mit_action"
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.mitigation_action"
-        required
-        :disabled="!isRiskEditing"
-      />
-
-      <label for="input_risk_lh_mitigated"
-        ><h3>Likelihood Mitigated:</h3></label
-      >
-      <select
-        id="input_risk_lh_mitigated"
-        form="new_risk"
-        v-model="cachedRisk.likelihood_mitigated"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option v-for="num in One2FiveList" :key="num" :value="num">
-          {{ num }}
-        </option>
-      </select>
-
-      <label for="input_risk_sev_mitigation"
-        ><h3>Severity Mitigation:</h3></label
-      >
-      <select
-        id="input_risk_sev_mitigation"
-        form="new_risk"
-        v-model="cachedRisk.severity_mitigation"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option v-for="num in One2FiveList" :key="num" :value="num">
-          {{ num }}
-        </option>
-      </select>
-
-      <label for="input_risk_prod_mit"><h3>Product Mitigated:</h3></label>
-      <input
-        id="input_risk_prod_mit"
-        type="text"
-        form="new_risk"
-        :class="'risk-product-' + riskProductMitigated"
-        v-model="riskProductMitigated"
-        :disabled="true"
-      />
-
-      <label for="input_risk_further_action"
-        ><h3>Further action required:</h3></label
-      >
-      <select
-        id="input_risk_further_action"
-        form="new_risk"
-        v-model="cachedRisk.further_action_required"
-        required
-        :disabled="!isRiskEditing"
-      >
-        <option value="true">Y</option>
-        <option value="false">N</option>
-      </select>
-
-      <label for="input_risk_cont_ref"
-        ><h3>Continuation Risk Reference:</h3></label
-      >
-      <input
-        id="input_risk_cont_ref"
-        type="text"
-        form="new_risk"
-        v-model="contRiskRef"
-        :disabled="true"
-      />
-
-      <label for="input_risk_ident"><h3>Identified by:</h3></label>
-      <input
-        id="input_risk_ident"
-        type="text"
-        form="new_risk"
-        v-model="cachedRisk.identified_by"
-        required
-        :disabled="!isRiskEditing"
-      />
-
-      <label for="input_risk_date"><h3>Date:</h3></label>
-      <input
-        v-if="isRiskEditing"
-        type="date"
-        form="new_risk"
-        v-model="cachedRisk.date"
-        id="input_risk_date"
-      />
-      <span v-else>{{ cachedRisk.date.substring(0, 10) }}</span>
+    <div v-if="isAdd">
+      <button form="new_risk" id="add_button" type="submit" value="Submit">
+        ➕
+      </button>
     </div>
+    <div v-else-if="!isRiskEditing">
+      <button form="new_risk" id="edit_button" @click="handleClickEdit">
+        📝
+      </button>
+    </div>
+    <div v-else>
+      <button form="new_risk" id="save_button" type="submit" value="Submit">
+        ✅
+      </button>
+      <button form="new_risk" id="cancel_button" @click="handleCancelEdit">
+        ↩
+      </button>
+    </div>
+
+    <label for="input_desc"> <h3>Description:</h3></label>
+    <input
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.description"
+      id="input_desc"
+      :disabled="!isRiskEditing"
+    />
+    <label for="input_risk_status"><h3>Risk Status:</h3></label>
+    <select
+      :class="'risk-status-' + cachedRisk.risk_status"
+      id="input_risk_status"
+      form="new_risk"
+      v-model="cachedRisk.risk_status"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="ACTIVE">ACTIVE</option>
+      <option value="RESOLVED">RESOLVED</option>
+      <option value="CONTINUED">CONTINUED</option>
+    </select>
+
+    <label for="input_risk_status"><h3>Discipline:</h3></label>
+    <select
+      id="input_risk_status"
+      form="new_risk"
+      v-model="cachedRisk.discipline"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option
+        v-for="discipline in disciplineList"
+        :key="discipline"
+        :value="discipline"
+        >{{ discipline }}</option
+      >
+    </select>
+
+    <label for="input_risk_number"><h3>Risk Number:</h3></label>
+    <input
+      type="text"
+      form="new_risk"
+      v-model="risk_number"
+      id="input_risk_number"
+      :disabled="true"
+    />
+
+    <label for="input_risk_revision"><h3>Revision:</h3></label>
+    <input
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.revision"
+      id="input_risk_revision"
+      required
+      :disabled="!isRiskEditing"
+    />
+
+    <label for="input_risk_lf_stage"><h3>Lifecycle Stage:</h3></label>
+    <select
+      :class="'risk-lifecycle-stage-' + cachedRisk.project_lifecycle_stage"
+      id="input_risk_lf_stage"
+      form="new_risk"
+      v-model="cachedRisk.project_lifecycle_stage"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="C">C</option>
+      <option value="O">O</option>
+      <option value="M">M</option>
+      <option value="D">D</option>
+    </select>
+
+    <label for="input_risk_hs_risk"><h3>HS Risk:</h3></label>
+    <input
+      v-if="!isRiskEditing && cachedRisk.hs_risk"
+      class="HS-H"
+      type="text"
+      value="H"
+      :disabled="true"
+    />
+    <input
+      v-else-if="!isRiskEditing && !cachedRisk.hs_risk"
+      type="text"
+      value=""
+      :disabled="true"
+    />
+    <select
+      v-else
+      id="input_risk_hs_risk"
+      form="new_risk"
+      v-model="cachedRisk.hs_risk"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select>
+
+    <label for="input_risk_env_risk"><h3>Environmental Risk:</h3></label>
+    <input
+      v-if="!isRiskEditing && cachedRisk.environmental_risk"
+      class="Env-E"
+      type="text"
+      value="E"
+      :disabled="true"
+    />
+    <input
+      v-else-if="!isRiskEditing && !cachedRisk.environmental_risk"
+      type="text"
+      value=""
+      :disabled="true"
+    />
+    <select
+      v-else
+      id="input_risk_env_risk"
+      form="new_risk"
+      v-model="cachedRisk.environmental_risk"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select>
+
+    <label for="input_risk_prog_risk"><h3>Programme Risk:</h3></label>
+    <input
+      v-if="!isRiskEditing && cachedRisk.programme_risk"
+      class="Prog-P"
+      type="text"
+      value="P"
+      :disabled="true"
+    />
+    <input
+      v-else-if="!isRiskEditing && !cachedRisk.programme_risk"
+      type="text"
+      value=""
+      :disabled="true"
+    />
+    <select
+      v-else
+      id="input_risk_prog_risk"
+      form="new_risk"
+      v-model="cachedRisk.programme_risk"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select>
+
+    <label for="input_risk_other_risk"><h3>Other Risk:</h3></label>
+    <input
+      v-if="!isRiskEditing && cachedRisk.other_risk"
+      class="Other-O"
+      type="text"
+      value="O"
+      :disabled="true"
+    />
+    <input
+      v-else-if="!isRiskEditing && !cachedRisk.other_risk"
+      type="text"
+      value=""
+      :disabled="true"
+    />
+    <select
+      v-else
+      id="input_risk_other_risk"
+      form="new_risk"
+      v-model="cachedRisk.other_risk"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select>
+
+    <label for="input_risk_likelihood"><h3>Likelihood:</h3></label>
+    <select
+      id="input_risk_likelihood"
+      form="new_risk"
+      v-model="cachedRisk.likelihood"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option v-for="num in One2FiveList" :key="num" :value="num">
+        {{ num }}
+      </option>
+    </select>
+
+    <label for="input_risk_severity"><h3>Severity:</h3></label>
+    <select
+      id="input_risk_severity"
+      form="new_risk"
+      v-model="cachedRisk.severity"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option v-for="num in One2FiveList" :key="num" :value="num">
+        {{ num }}
+      </option>
+    </select>
+
+    <label for="input_risk_product"><h3>Risk Product:</h3></label>
+    <input
+      id="input_risk_product"
+      type="text"
+      form="new_risk"
+      :class="'risk-product-' + riskProduct"
+      v-model="riskProduct"
+      :disabled="true"
+    />
+
+    <label for="input_risk_doc"><h3>Relevant Documentation:</h3></label>
+    <input
+      id="input_risk_doc"
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.relevant_documentation"
+      :disabled="!isRiskEditing"
+    />
+
+    <label for="input_risk_owner"><h3>Owner of Risk:</h3></label>
+    <input
+      id="input_risk_owner"
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.owner_of_risk"
+      required
+      :disabled="!isRiskEditing"
+    />
+
+    <label for="input_risk_mit_action"><h3>Mitigation Action:</h3></label>
+    <input
+      id="input_risk_mit_action"
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.mitigation_action"
+      required
+      :disabled="!isRiskEditing"
+    />
+
+    <label for="input_risk_lh_mitigated"><h3>Likelihood Mitigated:</h3></label>
+    <select
+      id="input_risk_lh_mitigated"
+      form="new_risk"
+      v-model="cachedRisk.likelihood_mitigated"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option v-for="num in One2FiveList" :key="num" :value="num">
+        {{ num }}
+      </option>
+    </select>
+
+    <label for="input_risk_sev_mitigation"><h3>Severity Mitigation:</h3></label>
+    <select
+      id="input_risk_sev_mitigation"
+      form="new_risk"
+      v-model="cachedRisk.severity_mitigation"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option v-for="num in One2FiveList" :key="num" :value="num">
+        {{ num }}
+      </option>
+    </select>
+
+    <label for="input_risk_prod_mit"><h3>Product Mitigated:</h3></label>
+    <input
+      id="input_risk_prod_mit"
+      type="text"
+      form="new_risk"
+      :class="'risk-product-' + riskProductMitigated"
+      v-model="riskProductMitigated"
+      :disabled="true"
+    />
+
+    <label for="input_risk_further_action"
+      ><h3>Further action required:</h3></label
+    >
+    <select
+      id="input_risk_further_action"
+      form="new_risk"
+      v-model="cachedRisk.further_action_required"
+      required
+      :disabled="!isRiskEditing"
+    >
+      <option value="true">Y</option>
+      <option value="false">N</option>
+    </select>
+
+    <label for="input_risk_cont_ref"
+      ><h3>Continuation Risk Reference:</h3></label
+    >
+    <input
+      id="input_risk_cont_ref"
+      type="text"
+      form="new_risk"
+      v-model="contRiskRef"
+      :disabled="true"
+    />
+
+    <label for="input_risk_ident"><h3>Identified by:</h3></label>
+    <input
+      id="input_risk_ident"
+      type="text"
+      form="new_risk"
+      v-model="cachedRisk.identified_by"
+      required
+      :disabled="!isRiskEditing"
+    />
+
+    <label for="input_risk_date"><h3>Date:</h3></label>
+    <input
+      v-if="isRiskEditing"
+      type="date"
+      form="new_risk"
+      v-model="cachedRisk.date"
+      id="input_risk_date"
+    />
+    <span v-else>{{ cachedRisk.date.substring(0, 10) }}</span>
   </div>
 </template>
 
